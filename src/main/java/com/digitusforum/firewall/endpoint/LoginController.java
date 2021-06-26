@@ -1,25 +1,24 @@
 package com.digitusforum.firewall.endpoint;
 
-import com.digitusforum.firewall.service.UserService;
-import microservice.LoginMicroservice;
-import model.Microservices;
-import model.Headers;
-import model.Locales;
-import model.M;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.digitusforum.firewall.service.UserService;
+
+import microservice.LoginMicroservice;
+import model.Headers;
+import model.M;
+import model.Microservices;
 import service.RequestService;
 import service.ThrowService;
 import vo.TokenVO;
 import vo.UserVO;
-
-import java.util.HashMap;
-import java.util.Map;
 
 //@CrossOrigin(origins = "*")
 @RestController
@@ -29,7 +28,7 @@ public class LoginController {
 	//UserService userService = new UserService();
     Map<String, TokenVO> tokenCache = new HashMap<>();
 
-    @RequestMapping(value = "/login/by/emailAndPassword")
+    @PostMapping(value = "/firewall/v1/login/by/emailAndPassword")
     public Object loginByEmailAndPassword(@RequestHeader(defaultValue = "en_us") String locale, @RequestBody UserVO userVO) {
     	if(tokenCache.containsKey(userVO.getEmail()+userVO.getPassword())){
             new Thread(() -> {
@@ -45,7 +44,9 @@ public class LoginController {
         return tokenCache.get(userVO.getEmail()+userVO.getPassword());
     }
 
-    private void updateCache(){
-
+    @PostMapping(value = "/firewall/v1/login/eraseCache/tokenCache")
+    public Object eraseTokenCache(@RequestBody UserVO userVO) {
+    	tokenCache.remove(userVO.getEmail()+userVO.getPassword());
+    	return "cache erased";
     }
 }
