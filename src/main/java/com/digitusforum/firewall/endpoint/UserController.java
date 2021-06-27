@@ -13,10 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 @RestController
 public class UserController {
-	@RequestMapping(value = "/**", method = RequestMethod.OPTIONS)
-	public ResponseEntity handle() {
-		return new ResponseEntity(HttpStatus.OK);
-	}
 
 	@RequestMapping(value = "/user/create")
 	public Object create() {
