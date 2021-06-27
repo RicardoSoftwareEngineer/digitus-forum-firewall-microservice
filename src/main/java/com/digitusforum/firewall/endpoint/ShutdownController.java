@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ShutdownController implements ApplicationContextAware {
 
-    private ApplicationContext context;
+	private ApplicationContext context;
 
-    @RequestMapping("/bye")
-    public void shutdownContext() {
-        ((ConfigurableApplicationContext) context).close();
-    }
+	@RequestMapping("/bye")
+	public void shutdownContext() {
+		((ConfigurableApplicationContext) context).close();
+	}
 
-    @Override
-    public void setApplicationContext(ApplicationContext ctx) throws BeansException {
-        this.context = ctx;
+	@Override
+	public void setApplicationContext(ApplicationContext ctx) throws BeansException {
+		this.context = ctx;
 
-    }
+	}
 }
