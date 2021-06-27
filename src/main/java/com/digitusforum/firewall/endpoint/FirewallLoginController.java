@@ -9,12 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.digitusforum.firewall.service.LoginMicroservice;
 
-import model.Headers;
-import model.M;
-import model.Microservices;
-import service.RequestService;
-import service.ThrowService;
-import vo.TokenVO;
 import vo.UserVO;
 
 @CrossOrigin(origins = "*")
@@ -27,10 +21,9 @@ public class FirewallLoginController {
 			@RequestBody UserVO userVO) {
 		return loginMicroservice.loginWithEmailAndPassword(userVO, locale);
 	}
-	
+
 	@RequestMapping(value = "/firewall/login/v1/validateToken")
-	public Object validateToken(@RequestHeader(defaultValue = "en_us") String locale,
-			@RequestBody UserVO userVO) {
+	public Object validateToken(@RequestHeader(defaultValue = "en_us") String locale, @RequestBody UserVO userVO) {
 		return loginMicroservice.validateToken(userVO.getToken(), locale);
 	}
 }
