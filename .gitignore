@@ -6,6 +6,7 @@ target/
 
 .mvn
 database
+logs*
 
 ### STS ###
 .apt_generated

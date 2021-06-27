@@ -11,7 +11,7 @@ import service.TimeService;
 import vo.InternationalizationVO;
 
 
-//todo make this guy kotlin
+//todo make this guy in kotlin
 
 @RestController
 public class InternationalizationController {
@@ -19,13 +19,6 @@ public class InternationalizationController {
 
     @RequestMapping(value = "/i18")
     public Object internationalization(@RequestBody Optional<InternationalizationVO> i18) {
-    	if(i18.isPresent()) System.out.println("firewall - tem coisa");
-    	if(i18.isEmpty()) System.out.println("firewall - vazio");
-    	
-    	
-        String requestTimeId = TimeService.startCounting();
-        String internationalizedMessage = i18Microservice.getMessageByKey(i18.get());
-        TimeService.persistElapsedTime(requestTimeId, "firewall/i18");
-        return internationalizedMessage;
+        return i18Microservice.getMessageByKey(i18.get());
     }
 }
