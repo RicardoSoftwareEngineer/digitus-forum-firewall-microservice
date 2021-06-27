@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.digitusforum.firewall.service.LoginMicroservice;
@@ -18,15 +19,18 @@ import vo.UserVO;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class LoginController {
+public class FirewallLoginController {
+	LoginMicroservice loginMicroservice = new LoginMicroservice();
 
-	@PostMapping(value = "/firewall/v1/login/byEmailAndPassword")
+	@PostMapping(value = "/firewall/login/v1/loginByEmailAndPassword")
 	public Object loginByEmailAndPassword(@RequestHeader(defaultValue = "en_us") String locale,
 			@RequestBody UserVO userVO) {
-		if (!RequestService.isUp(Microservices.LOGIN)) {
-			throw ThrowService.doIt(locale, 503, M.LOGIN_MICROSERVICE_OFFLINE);
-		}
-		TokenVO token = new LoginMicroservice().loginWithEmailAndPassword(userVO, Headers.DEFAULT(locale.toString()));
-		return token;
+		return loginMicroservice.loginWithEmailAndPassword(userVO, locale);
+	}
+	
+	@RequestMapping(value = "/firewall/login/v1/validateToken")
+	public Object validateToken(@RequestHeader(defaultValue = "en_us") String locale,
+			@RequestBody UserVO userVO) {
+		return loginMicroservice.validateToken(userVO, locale);
 	}
 }

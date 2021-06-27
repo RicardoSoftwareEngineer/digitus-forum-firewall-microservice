@@ -1,38 +1,57 @@
 package com.digitusforum.firewall.service;
 
-import io.netty.util.Timeout;
-import model.Microservices;
-import model.Headers;
-import model.Locales;
-import model.M;
-import model.Timeouts;
-
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+
+import model.Headers;
+import model.M;
+import model.Microservices;
+import model.Timeouts;
 import service.RequestService;
 import service.ThrowService;
-import vo.InternationalizationVO;
-import vo.TokenVO;
 import vo.UserVO;
-
-import java.util.HashMap;
-import java.util.Map;
 
 //todo pllleaase make this in kotlin, we are flying so high, so fast and so sophisticated that i would say simple
 public class LoginMicroservice {
-    private String LOGIN_BY_EMAIL_AND_PASSWORD_URL = Microservices.LOGIN + "/v1/loginByEmailAndPassword";
+	private String LOGIN_BY_EMAIL_AND_PASSWORD_URL = Microservices.LOGIN + "/v1/loginByEmailAndPassword";
+	private String VALIDATE_TOKEN = Microservices.LOGIN + "/v1/validateToken";
 
-    public TokenVO loginWithEmailAndPassword(UserVO userVO, MultiValueMap<String, String> headers){
-    	if (!RequestService.isUp(Microservices.LOGIN)){
-    		throw ThrowService.doIt(headers.getFirst("locale"), 503, M.LOGIN_MICROSERVICE_OFFLINE);
-    	}
-    	
-    	
-    	
-        //return null; //(TokenVO) RequestService.hit(LOGIN_BY_EMAIL_AND_PASSWORD_URL, userVO, Timeouts.ideal, new TokenVO());
-    	UserVO user = ((ResponseEntity<? extends UserVO>) RequestService.hitThemUp(LOGIN_BY_EMAIL_AND_PASSWORD_URL, Timeouts.ideal, userVO, headers)).getBody();
-    	TokenVO token = new TokenVO();
-    	//token.setName(resp.getName());
-    	return token;
-    }
+	public UserVO loginWithEmailAndPassword(UserVO userVO, String locale) {
+		if (StringUtils.isBlank(userVO.getEmail()))
+			throw ThrowService.doIt(locale, 403, M.LOGIN_MISSING_EMAIL);
+		if (StringUtils.isBlank(userVO.getPassword()))
+			throw ThrowService.doIt(locale, 403, M.LOGIN_MISSING_PASSWORD);
+		if (!RequestService.isUp(Microservices.LOGIN))
+			throw ThrowService.doIt(locale, 503, M.LOGIN_MICROSERVICE_OFFLINE);
+
+		ResponseEntity<? extends UserVO> response = null;
+		try {
+			response = (ResponseEntity<? extends UserVO>) RequestService.hitThemUp(LOGIN_BY_EMAIL_AND_PASSWORD_URL,
+					Timeouts.ideal, userVO, Headers.DEFAULT(locale));
+		} catch (HttpClientErrorException e) {
+			if (e.getRawStatusCode() == 404)
+				throw ThrowService.doIt(locale, 404, M.USER_NOT_FOUND);
+		}
+		return response.getBody();
+	}
+
+	public UserVO validateToken(UserVO userVO, String locale) {
+		if (StringUtils.isBlank(userVO.getToken()))
+			throw ThrowService.doIt(locale, 403, M.LOGIN_MISSING_TOKEN);
+		if (!RequestService.isUp(Microservices.LOGIN))
+			throw ThrowService.doIt(locale, 503, M.LOGIN_MICROSERVICE_OFFLINE);
+
+		ResponseEntity<? extends UserVO> response = null;
+		try {
+			response = (ResponseEntity<? extends UserVO>) RequestService.hitThemUp(VALIDATE_TOKEN, Timeouts.ideal,
+					userVO, Headers.DEFAULT(locale));
+		} catch (HttpClientErrorException e) {
+			if (e.getRawStatusCode() == 400)
+				throw ThrowService.doIt(locale, 400, M.LOGIN_INVALID_TOKEN);
+			if (e.getRawStatusCode() == 403)
+				throw ThrowService.doIt(locale, 403, M.LOGIN_EXPIRED_TOKEN);
+		}
+		return response.getBody();
+	}
 }
