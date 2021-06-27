@@ -6,13 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import vo.UserVO;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -50,11 +46,6 @@ public class UserController {
 	@RequestMapping(value = "/user/{id}/validate")
 	public Object validate() {
 		return "hi dad";
-	}
-
-	@RequestMapping(value = "/user/login")
-	public Object create(@RequestHeader(defaultValue = "en_us") String locale, @RequestBody UserVO user) {
-		return null;// userService.loginWithEmailAndPassword(user, locale);
 	}
 
 }
