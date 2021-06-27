@@ -31,6 +31,6 @@ public class FirewallLoginController {
 	@RequestMapping(value = "/firewall/login/v1/validateToken")
 	public Object validateToken(@RequestHeader(defaultValue = "en_us") String locale,
 			@RequestBody UserVO userVO) {
-		return loginMicroservice.validateToken(userVO, locale);
+		return loginMicroservice.validateToken(userVO.getToken(), locale);
 	}
 }

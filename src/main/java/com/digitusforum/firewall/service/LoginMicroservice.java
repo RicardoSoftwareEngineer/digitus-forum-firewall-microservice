@@ -36,12 +36,14 @@ public class LoginMicroservice {
 		return response.getBody();
 	}
 
-	public UserVO validateToken(UserVO userVO, String locale) {
-		if (StringUtils.isBlank(userVO.getToken()))
+	public UserVO validateToken(String token, String locale) {
+		if (StringUtils.isBlank(token))
 			throw ThrowService.doIt(locale, 403, M.LOGIN_MISSING_TOKEN);
 		if (!RequestService.isUp(Microservices.LOGIN))
 			throw ThrowService.doIt(locale, 503, M.LOGIN_MICROSERVICE_OFFLINE);
 
+		UserVO userVO = new UserVO();
+		userVO.setToken(token);
 		ResponseEntity<? extends UserVO> response = null;
 		try {
 			response = (ResponseEntity<? extends UserVO>) RequestService.hitThemUp(VALIDATE_TOKEN, Timeouts.ideal,
