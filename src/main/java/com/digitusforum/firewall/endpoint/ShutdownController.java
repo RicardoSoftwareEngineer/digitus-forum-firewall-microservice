@@ -14,7 +14,7 @@ public class ShutdownController implements ApplicationContextAware {
 
 	private ApplicationContext context;
 
-	@RequestMapping("/bye")
+	@RequestMapping("/shutdown")
 	public void shutdownContext() {
 		((ConfigurableApplicationContext) context).close();
 	}
