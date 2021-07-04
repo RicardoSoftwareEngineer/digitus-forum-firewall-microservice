@@ -14,10 +14,8 @@ import vo.UserVO;
 
 //todo pllleaase make this in kotlin, we are flying so high, so fast and so sophisticated that i would say simple
 public class LoginMicroservice {
-	private String LOGIN_BY_EMAIL_AND_PASSWORD_URL = MicroservicesURLs.LOGIN + "/v1/loginByEmailAndPassword";
-	private String VALIDATE_TOKEN = MicroservicesURLs.LOGIN + "/v1/validateToken";
 	private RequestService requestService;
-	
+
 	public LoginMicroservice(RequestService requestService) {
 		this.requestService = requestService;
 	}
@@ -32,8 +30,8 @@ public class LoginMicroservice {
 
 		ResponseEntity<? extends UserVO> response = null;
 		try {
-			response = (ResponseEntity<? extends UserVO>) requestService.hitIt(LOGIN_BY_EMAIL_AND_PASSWORD_URL,
-					Timeouts.ideal, userVO, Headers.DEFAULT(locale));
+			response = (ResponseEntity<? extends UserVO>) requestService.hitIt(
+					MicroservicesURLs.LOGIN_BY_EMAIL_AND_PASSWORD, Timeouts.ideal, userVO, Headers.DEFAULT(locale));
 		} catch (HttpClientErrorException e) {
 			if (e.getRawStatusCode() == 404)
 				throw ThrowService.doIt(locale, 404, M.USER_NOT_FOUND);
@@ -51,8 +49,8 @@ public class LoginMicroservice {
 		userVO.setToken(token);
 		ResponseEntity<? extends UserVO> response = null;
 		try {
-			response = (ResponseEntity<? extends UserVO>) requestService.hitIt(VALIDATE_TOKEN, Timeouts.ideal,
-					userVO, Headers.DEFAULT(locale));
+			response = (ResponseEntity<? extends UserVO>) requestService.hitIt(MicroservicesURLs.LOGIN_VALIDATE_TOKEN,
+					Timeouts.ideal, userVO, Headers.DEFAULT(locale));
 		} catch (HttpClientErrorException e) {
 			if (e.getRawStatusCode() == 400)
 				throw ThrowService.doIt(locale, 400, M.LOGIN_INVALID_TOKEN);
