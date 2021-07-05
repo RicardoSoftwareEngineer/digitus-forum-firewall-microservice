@@ -7,13 +7,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import microservice.I18Microservice;
+import service.RequestService;
 import vo.InternationalizationVO;
 
 //todo make this guy in kotlin
 
 @RestController
 public class FirewallInternationalizationController {
-	I18Microservice i18Microservice = new I18Microservice();
+	I18Microservice i18Microservice = new I18Microservice(new RequestService());
 
 	@PostMapping(value = "/firewall/internationalization/v1/i18")
 	public Object internationalization(@RequestBody Optional<InternationalizationVO> i18) {

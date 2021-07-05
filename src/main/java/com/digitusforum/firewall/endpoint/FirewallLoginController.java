@@ -9,12 +9,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.digitusforum.firewall.service.LoginMicroservice;
 
+import service.RequestService;
 import vo.UserVO;
 
 @CrossOrigin(origins = "*")
 @RestController
 public class FirewallLoginController {
-	LoginMicroservice loginMicroservice = new LoginMicroservice();
+	LoginMicroservice loginMicroservice = new LoginMicroservice(new RequestService());
 
 	@PostMapping(value = "/firewall/login/v1/loginByEmailAndPassword")
 	public Object loginByEmailAndPassword(@RequestHeader(defaultValue = "en_us") String locale,
