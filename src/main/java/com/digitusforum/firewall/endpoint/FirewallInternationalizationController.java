@@ -20,4 +20,9 @@ public class FirewallInternationalizationController {
 	public Object internationalization(@RequestBody Optional<InternationalizationVO> i18) {
 		return i18Microservice.getMessageByKey(i18.get());
 	}
+	
+	@PostMapping(value = "/firewall/internationalization/v1/deleteCache")
+	public void deleteCache() {
+		i18Microservice.deleteCache();
+	}
 }
