@@ -1,4 +1,4 @@
-package com.digitusforum.firewall.endpoint;
+package com.digitusforum.firewall.login;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -7,10 +7,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.digitusforum.firewall.service.LoginMicroservice;
-
-import service.RequestService;
-import vo.UserVO;
+import request.RequestService;
+import user.UserVO;
 
 @CrossOrigin(origins = "*")
 @RestController

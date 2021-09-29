@@ -1,4 +1,4 @@
-package com.digitusforum.firewall.endpoint;
+package com.digitusforum.firewall.i18;
 
 import java.util.Optional;
 
@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import microservice.I18Microservice;
-import service.RequestService;
-import vo.InternationalizationVO;
+import i18.I18Microservice;
+import i18.InternationalizationVO;
+import request.RequestService;
 
 //todo make this guy in kotlin
 

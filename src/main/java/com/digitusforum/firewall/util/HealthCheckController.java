@@ -1,4 +1,4 @@
-package com.digitusforum.firewall.endpoint;
+package com.digitusforum.firewall.util;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

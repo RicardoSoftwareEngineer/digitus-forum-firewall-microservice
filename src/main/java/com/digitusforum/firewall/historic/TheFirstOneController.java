@@ -1,4 +1,4 @@
-package com.digitusforum.firewall.endpoint;
+package com.digitusforum.firewall.historic;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;

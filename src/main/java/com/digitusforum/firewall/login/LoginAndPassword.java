@@ -1,4 +1,4 @@
-package com.digitusforum.firewall.model.vo;
+package com.digitusforum.firewall.login;
 
 public class LoginAndPassword {
 	private String login;
