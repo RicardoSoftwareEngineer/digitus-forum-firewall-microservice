@@ -1,16 +1,16 @@
-package com.digitusforum.firewall.service;
+package com.digitusforum.firewall.login;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 
-import model.Headers;
-import model.M;
-import model.MicroservicesURLs;
-import model.Timeouts;
-import service.RequestService;
-import service.ThrowService;
-import vo.UserVO;
+import i18.M;
+import request.Headers;
+import request.MicroservicesURLs;
+import request.RequestService;
+import request.Timeouts;
+import user.UserVO;
+import util.ThrowService;
 
 //todo pllleaase make this in kotlin, we are flying so high, so fast and so sophisticated that i would say simple
 public class LoginMicroservice {

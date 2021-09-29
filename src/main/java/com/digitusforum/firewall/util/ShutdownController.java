@@ -1,4 +1,4 @@
-package com.digitusforum.firewall.endpoint;
+package com.digitusforum.firewall.util;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
