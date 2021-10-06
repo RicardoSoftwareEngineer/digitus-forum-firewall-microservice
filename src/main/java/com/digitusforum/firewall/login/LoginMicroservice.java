@@ -7,16 +7,16 @@ import org.springframework.web.client.HttpClientErrorException;
 import i18.M;
 import request.Headers;
 import request.MicroservicesURLs;
-import request.RequestService;
+import request.RequestServiceDEPRECATED;
 import request.Timeouts;
 import user.UserVO;
 import util.ThrowService;
 
 //todo pllleaase make this in kotlin, we are flying so high, so fast and so sophisticated that i would say simple
 public class LoginMicroservice {
-	private RequestService requestService;
+	private RequestServiceDEPRECATED requestService;
 
-	public LoginMicroservice(RequestService requestService) {
+	public LoginMicroservice(RequestServiceDEPRECATED requestService) {
 		this.requestService = requestService;
 	}
 

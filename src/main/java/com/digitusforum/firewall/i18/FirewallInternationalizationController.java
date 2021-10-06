@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import i18.I18Microservice;
 import i18.InternationalizationVO;
-import request.RequestService;
+import request.RequestServiceDEPRECATED;
 
 //todo make this guy in kotlin
 
 @RestController
 public class FirewallInternationalizationController {
-	I18Microservice i18Microservice = new I18Microservice(new RequestService());
+	I18Microservice i18Microservice = new I18Microservice(new RequestServiceDEPRECATED());
 
 	@PostMapping(value = "/firewall/internationalization/v1/i18")
 	public Object internationalization(@RequestBody Optional<InternationalizationVO> i18) {
