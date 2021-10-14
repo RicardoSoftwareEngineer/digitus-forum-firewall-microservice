@@ -16,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.digitusforum.firewall.login.TokenVO;
 import com.google.gson.Gson;
 
-import i18.InternationalizationVO;
+import i18.I18VO;
 import i18.M;
 import request.MicroservicesURLs;
 import util.ThrowService;
@@ -31,7 +31,7 @@ public class RequestService {
 
 	private void checkLoginMS(String locale) {
 		if (!isUp(MicroservicesURLs.LOGIN))
-			throw ThrowService.doIt(locale, 503, M.USER_MICROSERVICE_OFFLINE);
+			throw ThrowService.doIt(locale, 503, M.LOGIN_MICROSERVICE_OFFLINE);
 	}
 
 	public TokenVO createToken(TokenVO tokenVO, String locale) {
@@ -100,25 +100,26 @@ public class RequestService {
 		} catch (HttpClientErrorException e) {
 			String errorMessage = e.getMessage().replace("[", "").replace("]", "").substring(6);
 			ErrorMessageVO errorMessageVO = new Gson().fromJson(errorMessage, ErrorMessageVO.class);
+			System.out.println("loopinfinito");
 			String i18Message = getMessageByKey(locale, errorMessageVO.getMessage());
 			throw new ResponseStatusException(e.getStatusCode(), i18Message);
 		}
 	}
 
 	public String getMessageByKey(String locale, String key) {
-		InternationalizationVO i18 = new InternationalizationVO(locale, key);
+		I18VO i18 = new I18VO(locale, key);
 		String cacheKey = i18.getKey() + "." + i18.getLocale();
 		updateCache(i18, cacheKey);
 		return i18MessagesCache.get(cacheKey) != null ? i18MessagesCache.get(cacheKey)
 				: "Internationalization service is down, sorry for the inconvenience - message key = " + i18.getKey();
 	}
 
-	private void updateCache(InternationalizationVO i18, String cacheKey) {
+	private void updateCache(I18VO i18, String cacheKey) {
 		if (i18MessagesCache.get(cacheKey) != null) {
-			final InternationalizationVO i18_final = i18;
+			final I18VO i18_final = i18;
 			new Thread(() -> {
 				if (isUp(MicroservicesURLs.I18)) {
-					InternationalizationVO i18_response = makeRequest(i18_final);
+					I18VO i18_response = makeRequest(i18_final);
 					i18MessagesCache.put(cacheKey, i18_response.getMessage());
 				}
 			}).start();
@@ -128,8 +129,9 @@ public class RequestService {
 		}
 	}
 
-	private InternationalizationVO makeRequest(InternationalizationVO i18) {
-		String jsonResponse = request(MicroservicesURLs.I18, i18, i18.getLocale());
-		return new Gson().fromJson(jsonResponse, InternationalizationVO.class);
+	private I18VO makeRequest(I18VO i18) {
+		String url = MicroservicesURLs.I18;
+		String jsonResponse = request(url, i18, i18.getLocale());
+		return new Gson().fromJson(jsonResponse, I18VO.class);
 	}
 }

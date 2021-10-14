@@ -25,15 +25,14 @@ public class UserController {
 	@PostMapping(value = "/firewall/user/v1/create")
 	public Object create(@RequestHeader(defaultValue = "en_us") String locale, @RequestHeader String authorization,
 			@RequestBody UserVO userVO) {
-		TokenVO loggedUser = requesService.validateToken(authorization, locale);
 		return userService.createUser(userVO, locale);
 	}
 
-	@GetMapping(value = "/firewall/user/v1/retrieve")
+	/*@GetMapping(value = "/firewall/user/v1/retrieve")
 	public Object retrieve(@RequestHeader(defaultValue = "en_us") String locale, @RequestHeader String Authorization) {
 		// UserVO loggedUser = loginMicroservice.validateToken(Authorization, locale);
 		return userService.retrieveUsers(locale);
-	}
+	}*/
 
 	@GetMapping(value = "/firewall/user/v1/{id}/retrieve")
 	public Object retrieveById(@RequestHeader(defaultValue = "en_us") String locale,
