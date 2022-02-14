@@ -10,16 +10,15 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.digitusforum.firewall.login.TokenVO;
 import com.digitusforum.firewall.util.RequestService;
 
-import user.UserVO;
+
 
 @RestController
 public class UserController {
 	// LoginMicroservice loginMicroservice = new LoginMicroservice(new
 	// RequestService());
-	UserService userService = new UserService(new com.digitusforum.firewall.util.RequestService());
+	UserService userService = new UserService(new RequestService());
 	RequestService requesService = new RequestService();
 
 	@PostMapping(value = "/firewall/user/v1/create")
