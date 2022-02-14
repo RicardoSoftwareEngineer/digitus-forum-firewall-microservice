@@ -1,4 +1,4 @@
-package com.digitusforum.firewall.util;
+package com.digitusforum.firewall.course;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,58 +17,31 @@ import org.springframework.web.server.ResponseStatusException;
 import com.digitusforum.firewall.course.CourseVO;
 import com.digitusforum.firewall.i18.I18VO;
 import com.digitusforum.firewall.login.TokenVO;
+import com.digitusforum.firewall.util.ErrorMessageVO;
+import com.digitusforum.firewall.util.Headers;
+import com.digitusforum.firewall.util.M;
+import com.digitusforum.firewall.util.MicroservicesURLs;
+import com.digitusforum.firewall.util.ThrowService;
+import com.digitusforum.firewall.util.TimeService;
+import com.digitusforum.firewall.util.Timeouts;
 import com.google.gson.Gson;
 
-public class RequestService {
+public class CourseRequestService {
 	private Map<String, String> i18MessagesCache = new HashMap<>();
 
-	private void checkUserMS(String locale) {
-		if (!isUp(MicroservicesURLs.USER))
-			throw ThrowService.doIt(locale, 503, M.USER_MICROSERVICE_OFFLINE);
-	}
-
-	private void checkLoginMS(String locale) {
-		if (!isUp(MicroservicesURLs.LOGIN))
-			throw ThrowService.doIt(locale, 503, M.LOGIN_MICROSERVICE_OFFLINE);
-	}
-
-	private void checkTrailAndCourseMS(String locale) {
+	private void checkCourseMS(String locale) {
 		if (!isUp(MicroservicesURLs.COURSE))
 			throw ThrowService.doIt(locale, 503, M.COURSE_MICROSERVICE_OFFLINE);
 	}
 
-	public List<CourseVO> retrieveCourses(String locale) {
-		checkTrailAndCourseMS(locale);
+	public List<CourseVO> retrieveAll(String locale) {
+		checkCourseMS(locale);
 		String jsonResponse = request(MicroservicesURLs.COURSE_RETRIEVE_ALL, locale);
-		List<CourseVO> trails = new Gson().fromJson(jsonResponse, List.class);
-		return trails;
+		List<CourseVO> courses = new Gson().fromJson(jsonResponse, List.class);
+		return courses;
 	}
 
-	public TokenVO createToken(TokenVO tokenVO, String locale) {
-		checkLoginMS(locale);
-		String jsonResponse = request(MicroservicesURLs.LOGIN_CREATE_TOKEN, tokenVO, locale);
-		tokenVO = new Gson().fromJson(jsonResponse, TokenVO.class);
-		return tokenVO;
-	}
-
-	public TokenVO validateToken(String authorization, String locale) {
-		String[] tokenData = authorization.split(" ");
-		if (tokenData.length != 2)
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, M.LOGIN_INVALID_TOKEN);
-		TokenVO tokenVO = new TokenVO();
-		tokenVO.setToken(tokenData[1]);
-		tokenVO.setTokenType(tokenData[0]);
-		return validateToken(tokenVO, locale);
-	}
-
-	public TokenVO validateToken(TokenVO tokenVO, String locale) {
-		checkLoginMS(locale);
-
-		String jsonResponse = request(MicroservicesURLs.LOGIN_VALIDATE_TOKEN, tokenVO, locale);
-		tokenVO = new Gson().fromJson(jsonResponse, TokenVO.class);
-		return tokenVO;
-	}
-
+	
 	public boolean isUp(String endpoint) {
 		String requestTimeId = TimeService.startCounting();
 		try {
@@ -92,10 +65,6 @@ public class RequestService {
 		return request(endpoint, Timeouts.debug, requestEntityBody, Headers.DEFAULT(locale), locale);
 	}
 
-	public String createUser(String endpoint, Object userVO, String locale) {
-		checkUserMS(locale);
-		return request(MicroservicesURLs.USER_CREATE, userVO, locale);
-	}
 
 	public String request(String endpoint, int timeout, Object requestEntityBody, MultiValueMap<String, String> headers,
 			String locale) {
@@ -111,7 +80,6 @@ public class RequestService {
 		} catch (HttpClientErrorException e) {
 			String errorMessage = e.getMessage().replace("[", "").replace("]", "").substring(6);
 			ErrorMessageVO errorMessageVO = new Gson().fromJson(errorMessage, ErrorMessageVO.class);
-			System.out.println("loopinfinito");
 			String i18Message = getMessageByKey(locale, errorMessageVO.getMessage());
 			throw new ResponseStatusException(e.getStatusCode(), i18Message);
 		}

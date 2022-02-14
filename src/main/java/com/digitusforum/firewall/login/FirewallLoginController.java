@@ -18,8 +18,8 @@ public class FirewallLoginController {
 		return requestService.createToken(tokenVO, locale);
 	}
 
-	@CrossOrigin
-	@RequestMapping(value = "/firewall/login/v1/validateToken")
+	//@CrossOrigin
+	//@RequestMapping(value = "/firewall/login/v1/validateToken")
 	public TokenVO validateToken(@RequestHeader(defaultValue = "en_us") String locale, @RequestBody TokenVO tokenVO) {
 		return requestService.validateToken(tokenVO, locale);
 	}
