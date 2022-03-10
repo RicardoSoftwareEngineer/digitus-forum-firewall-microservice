@@ -9,6 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -17,8 +18,10 @@ import org.springframework.web.server.ResponseStatusException;
 import com.digitusforum.firewall.course.CourseVO;
 import com.digitusforum.firewall.i18.I18VO;
 import com.digitusforum.firewall.login.TokenVO;
+import com.digitusforum.firewall.module.ModuleVO;
 import com.google.gson.Gson;
 
+@Service
 public class RequestService {
 	private Map<String, String> i18MessagesCache = new HashMap<>();
 
@@ -32,16 +35,52 @@ public class RequestService {
 			throw ThrowService.doIt(locale, 503, M.LOGIN_MICROSERVICE_OFFLINE);
 	}
 
-	private void checkTrailAndCourseMS(String locale) {
+	private void checkCourseMS(String locale) {
 		if (!isUp(MicroservicesURLs.COURSE))
 			throw ThrowService.doIt(locale, 503, M.COURSE_MICROSERVICE_OFFLINE);
 	}
 
+	public CourseVO createCourse(CourseVO courseVO, String locale) {
+		checkCourseMS(locale);
+		String jsonResponse = request(MicroservicesURLs.COURSE_CREATE, courseVO, locale);
+		CourseVO course = new Gson().fromJson(jsonResponse, CourseVO.class);
+		return course;
+	}
+	
+	public CourseVO delete(CourseVO courseVO, String locale) {
+		checkCourseMS(locale);
+		String jsonResponse = request(MicroservicesURLs.COURSE_DELETE, courseVO, locale);
+		CourseVO course = new Gson().fromJson(jsonResponse, CourseVO.class);
+		return course;
+	}
+
 	public List<CourseVO> retrieveCourses(String locale) {
-		checkTrailAndCourseMS(locale);
+		checkCourseMS(locale);
 		String jsonResponse = request(MicroservicesURLs.COURSE_RETRIEVE_ALL, locale);
-		List<CourseVO> trails = new Gson().fromJson(jsonResponse, List.class);
-		return trails;
+		List<CourseVO> courses = new Gson().fromJson(jsonResponse, List.class);
+		return courses;
+	}
+
+	public CourseVO retrieveById(CourseVO courseVO, String locale) {
+		checkCourseMS(locale);
+		String jsonResponse = request(MicroservicesURLs.COURSE_RETRIEVE_BY_ID, courseVO, locale);
+		CourseVO course = new Gson().fromJson(jsonResponse, CourseVO.class);
+		return course;
+	}
+	
+	public CourseVO retrieveSubjectsByCourseId(CourseVO courseVO, String locale) {
+		checkCourseMS(locale);
+		String jsonResponse = request(MicroservicesURLs.COURSE_RETRIEVE_SUBJECTS_BY_COURSE_ID, courseVO, locale);
+		CourseVO course = new Gson().fromJson(jsonResponse, CourseVO.class);
+		return course;
+	}
+
+	public List<ModuleVO> retrieveModulesWithVideosByCourseId(CourseVO courseVO, String locale) {
+		checkCourseMS(locale);
+		String jsonResponse = request(MicroservicesURLs.COURSE_RETRIEVE_MODULES_WITH_VIDEOS_BY_COURSE_ID, courseVO,
+				locale);
+		List<ModuleVO> modules = new Gson().fromJson(jsonResponse, List.class);
+		return modules;
 	}
 
 	public TokenVO createToken(TokenVO tokenVO, String locale) {
