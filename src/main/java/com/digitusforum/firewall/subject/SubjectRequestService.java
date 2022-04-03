@@ -45,5 +45,12 @@ public class SubjectRequestService {
 		SubjectVO subject = new Gson().fromJson(jsonResponse, SubjectVO.class);
 		return subject;
 	}
+	
+	public SubjectVO update(SubjectVO subjectVO, String locale) {
+		checkCourseMS(locale);
+		String jsonResponse = requestService.request(SubjectURLs.UPDATE, subjectVO, locale);
+		SubjectVO subject = new Gson().fromJson(jsonResponse, SubjectVO.class);
+		return subject;
+	}
 
 }

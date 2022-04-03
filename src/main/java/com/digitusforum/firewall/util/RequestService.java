@@ -91,13 +91,14 @@ public class RequestService {
 	}
 
 	public TokenVO validateToken(String authorization, String locale) {
-		String[] tokenData = authorization.split(" ");
+		return null;
+		/*String[] tokenData = authorization.split(" ");
 		if (tokenData.length != 2)
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, M.LOGIN_INVALID_TOKEN);
 		TokenVO tokenVO = new TokenVO();
 		tokenVO.setToken(tokenData[1]);
 		tokenVO.setTokenType(tokenData[0]);
-		return validateToken(tokenVO, locale);
+		return validateToken(tokenVO, locale);*/
 	}
 
 	public TokenVO validateToken(TokenVO tokenVO, String locale) {

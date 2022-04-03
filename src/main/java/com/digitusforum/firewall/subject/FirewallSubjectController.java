@@ -42,6 +42,14 @@ public class FirewallSubjectController {
 		TokenVO tokenVO = requestService.validateToken(authorization, locale);
 		return subjectRequestService.retrieveByIdWithVideos(moduleVO, locale);
 	}
+	
+	@CrossOrigin
+	@PostMapping(value = "/firewall/subject/v1/update")
+	public SubjectVO update(@RequestHeader(defaultValue = "en_us") String locale,
+			@RequestHeader String authorization, @RequestBody SubjectVO moduleVO) {
+		TokenVO tokenVO = requestService.validateToken(authorization, locale);
+		return subjectRequestService.update(moduleVO, locale);
+	}
 
 }
 
