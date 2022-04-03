@@ -8,4 +8,5 @@ public class SubjectURLs {
 	public static String CREATE = SUBJECT + "/create";
 	public static String RETRIEVE_BY_PERFIL_ID = SUBJECT + "/retrieveByPerfilId";
 	public static String RETRIEVE_BY_ID_WITH_VIDEOS = SUBJECT + "/retrieveByIdWithVideos";
+	public static String UPDATE = SUBJECT + "/update";
 }

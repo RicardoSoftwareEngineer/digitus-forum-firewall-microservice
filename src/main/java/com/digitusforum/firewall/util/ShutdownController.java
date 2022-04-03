@@ -13,10 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class ShutdownController implements ApplicationContextAware {
 
 	private ApplicationContext context;
-
+	
 	@RequestMapping("/shutdown")
 	public void shutdownContext() {
 		((ConfigurableApplicationContext) context).close();
+	}
+	
+	@RequestMapping("/shutdownAll")
+	public String shutdownContextAll() {
+		return "to do";
 	}
 
 	@Override

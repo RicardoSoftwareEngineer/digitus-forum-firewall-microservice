@@ -15,9 +15,19 @@ public class HealthCheckController {
 	public ResponseEntity handle() {
 		return new ResponseEntity(HttpStatus.OK);
 	}
+	
+	@RequestMapping("/test")
+	public String test() {
+		return "firewall";
+	}
 
-	@RequestMapping(value = "/healthCheck")
+	@RequestMapping(value = "/firewall/healthCheck")
 	public ResponseEntity<String> healthCheck() {
-		return ResponseEntity.status(HttpStatus.OK).body("");
+		return ResponseEntity.status(HttpStatus.OK).body("ok");
+	}
+	
+	@RequestMapping(value = "/healthCheck")
+	public ResponseEntity<String> healthCheck2() {
+		return ResponseEntity.status(HttpStatus.OK).body("ok");
 	}
 }
