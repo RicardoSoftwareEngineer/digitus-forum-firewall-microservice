@@ -32,9 +32,9 @@ public class LinkRequestService {
 		return link;
 	}
 
-	public List<LinkVO> retrieveByModuleVideoId(LinkVO linkVO, String locale) {
+	public List<LinkVO> retrieveByVideoId(LinkVO linkVO, String locale) {
 		checkCourseMS(locale);
-		String jsonResponse = requestService.request(LinkURLs.RETRIEVE_BY_MODULE_VIDEO_ID, linkVO, locale);
+		String jsonResponse = requestService.request(LinkURLs.RETRIEVE_BY_VIDEO_ID, linkVO, locale);
 		List<LinkVO> links = new Gson().fromJson(jsonResponse, List.class);
 		return links;
 	}

@@ -84,14 +84,34 @@ public class RequestService {
 	}
 
 	public TokenVO createToken(TokenVO tokenVO, String locale) {
-		checkLoginMS(locale);
-		String jsonResponse = request(MicroservicesURLs.LOGIN_CREATE_TOKEN, tokenVO, locale);
-		tokenVO = new Gson().fromJson(jsonResponse, TokenVO.class);
-		return tokenVO;
+		String emailAndPassword = tokenVO.getEmail() + " " + tokenVO.getPassword();
+		switch (emailAndPassword) {
+			case "ricardo ricardo":
+				tokenVO.setTokenType("ricardo");
+				tokenVO.setToken("ricardo");
+				return tokenVO;
+			case "edilson edilson":
+				tokenVO.setTokenType("edilson");
+				tokenVO.setToken("edilson");
+				return tokenVO;
+			default: throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, M.LOGIN_WRONG_LOGIN_OR_PASSWORD);
+		}
+		
+		//checkLoginMS(locale);
+		//String jsonResponse = request(MicroservicesURLs.LOGIN_CREATE_TOKEN, tokenVO, locale);
+		//tokenVO = new Gson().fromJson(jsonResponse, TokenVO.class);
+		//return tokenVO;
 	}
 
 	public TokenVO validateToken(String authorization, String locale) {
-		return null;
+		System.out.println(authorization);
+		switch (authorization) {
+			case "ricardo ricardo": return null;
+			case "edilson edilson": return null;
+			default: throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, M.LOGIN_INVALID_TOKEN);
+		}
+		
+		//return null;
 		/*String[] tokenData = authorization.split(" ");
 		if (tokenData.length != 2)
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, M.LOGIN_INVALID_TOKEN);
