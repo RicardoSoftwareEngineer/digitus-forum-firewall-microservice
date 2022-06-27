@@ -28,11 +28,11 @@ public class FirewallLinkController {
 	}
 
 	@CrossOrigin
-	@PostMapping(value = "/firewall/link/v1/retrieveByModuleVideoId")
-	public List<LinkVO> retrieveByCourseId(@RequestHeader(defaultValue = "en_us") String locale,
+	@PostMapping(value = "/firewall/link/v1/retrieveByVideoId")
+	public List<LinkVO> retrieveByvIDEOId(@RequestHeader(defaultValue = "en_us") String locale,
 			@RequestHeader String authorization, @RequestBody LinkVO linkVO) {
 		TokenVO tokenVO = requestService.validateToken(authorization, locale);
-		return linkRequestService.retrieveByModuleVideoId(linkVO, locale);
+		return linkRequestService.retrieveByVideoId(linkVO, locale);
 	}
 
 	@CrossOrigin

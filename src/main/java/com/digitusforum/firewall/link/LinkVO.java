@@ -7,7 +7,7 @@ import com.digitusforum.firewall.video.VideoVO;
 
 public class LinkVO {
 	private String linkId;
-	private String moduleVideoId;
+	private String videoId;
 	private String userId;
 	private String name;
 	private String url;
@@ -29,12 +29,12 @@ public class LinkVO {
 		this.linkId = linkId;
 	}
 
-	public String getModuleVideoId() {
-		return moduleVideoId;
+	public String getVideoId() {
+		return videoId;
 	}
 
-	public void setModuleVideoId(String moduleVideoId) {
-		this.moduleVideoId = moduleVideoId;
+	public void setVideoId(String videoId) {
+		this.videoId = videoId;
 	}
 
 	public String getName() {
