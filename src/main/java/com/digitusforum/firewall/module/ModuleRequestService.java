@@ -68,11 +68,11 @@ public class ModuleRequestService {
 		return module;
 	}
 
-	public ModuleVO reorder(ModuleVO moduleVO, String locale) {
+	public List<ModuleVO> reorder(ModuleVO moduleVO, String locale) {
 		checkCourseMS(locale);
 		String jsonResponse = requestService.request(ModuleURLs.REORDER, moduleVO, locale);
-		ModuleVO module = new Gson().fromJson(jsonResponse, ModuleVO.class);
-		return module;
+		List<ModuleVO> modules = new Gson().fromJson(jsonResponse, List.class);
+		return modules;
 	}
 
 	public ModuleVideoVO addVideo(ModuleVideoVO moduleVideoVO, String locale) {

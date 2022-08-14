@@ -7,6 +7,8 @@ import com.digitusforum.firewall.video.VideoVO;
 
 public class SubjectVO {
 	private String subjectId;
+	private String videoId;
+	private String courseId;
 	private String userId;
 	private String perfilId;
 	private int number;
@@ -15,6 +17,22 @@ public class SubjectVO {
 	private String sinopse;
 	private String description;
 	private List<VideoVO> videos = new ArrayList<>();
+
+	public String getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(String courseId) {
+		this.courseId = courseId;
+	}
+
+	public String getVideoId() {
+		return videoId;
+	}
+
+	public void setVideoId(String videoId) {
+		this.videoId = videoId;
+	}
 
 	public String getSubjectId() {
 		return subjectId;

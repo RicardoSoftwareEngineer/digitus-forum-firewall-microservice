@@ -25,7 +25,7 @@ public class I18Microservice {
 			messagesCache.put(cacheKey, i18.getMessage());
 		}
 		return messagesCache.get(cacheKey) != null ? messagesCache.get(cacheKey)
-				: "Internationalization service is down, sorry for the inconvenience - message key = " + i18.getKey();
+				: "message key 2 = " + i18.getKey();
 	}
 
 	public String getMessageByKey(String locale, String key) {

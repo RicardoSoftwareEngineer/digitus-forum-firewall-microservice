@@ -1,7 +1,9 @@
 package com.digitusforum.firewall.login;
 
+import java.time.ZonedDateTime;
+
 public class TokenVO {
-	// private int userId;
+	private String userId;
 	private String userName;
 	private String email;
 	private String password;
@@ -12,6 +14,23 @@ public class TokenVO {
 	private String lastPerfilType;
 	private String lastPerfilName;
 	private long stillValidForSeconds;
+	private ZonedDateTime createdIn;
+
+	public ZonedDateTime getCreatedIn() {
+		return createdIn;
+	}
+
+	public void setCreatedIn(ZonedDateTime createdIn) {
+		this.createdIn = createdIn;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
 	public String getLastPerfilUsed() {
 		return lastPerfilUsed;

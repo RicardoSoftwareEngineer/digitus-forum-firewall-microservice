@@ -1,6 +1,6 @@
 package com.digitusforum.firewall.user;
 
-public class UserVO {
+public class FirewallUserVO {
 	private String id;
 	private String name;
 	private String email;
@@ -8,15 +8,15 @@ public class UserVO {
 	private String token;
 	private boolean deleted;
 
-	public UserVO() {
+	public FirewallUserVO() {
 	}
 
-	public UserVO(String email, String password) {
+	public FirewallUserVO(String email, String password) {
 		this.email = email;
 		this.password = password;
 	}
 
-	public UserVO(String userId, String name, String email, String password) {
+	public FirewallUserVO(String userId, String name, String email, String password) {
 		this.id = userId;
 		this.name = name;
 		this.email = email;

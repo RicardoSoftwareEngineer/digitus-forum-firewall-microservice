@@ -32,9 +32,9 @@ public class SubjectRequestService {
 		return subject;
 	}
 
-	public List<SubjectVO> retrieveByPerfilId(SubjectVO subjectVO, String locale) {
+	public List<SubjectVO> retrieveByCourseId(SubjectVO subjectVO, String locale) {
 		checkCourseMS(locale);
-		String jsonResponse = requestService.request(SubjectURLs.RETRIEVE_BY_PERFIL_ID, subjectVO, locale);
+		String jsonResponse = requestService.request(SubjectURLs.RETRIEVE_BY_COURSE_ID, subjectVO, locale);
 		List<SubjectVO> subjects = new Gson().fromJson(jsonResponse, List.class);
 		return subjects;
 	}
@@ -51,6 +51,27 @@ public class SubjectRequestService {
 		String jsonResponse = requestService.request(SubjectURLs.UPDATE, subjectVO, locale);
 		SubjectVO subject = new Gson().fromJson(jsonResponse, SubjectVO.class);
 		return subject;
+	}
+
+	public SubjectVO addVideo(SubjectVO subjectVO, String locale) {
+		checkCourseMS(locale);
+		String jsonResponse = requestService.request(SubjectURLs.ADD_VIDEO, subjectVO, locale);
+		SubjectVO subject = new Gson().fromJson(jsonResponse, SubjectVO.class);
+		return subject;
+	}
+
+	public SubjectVO removeVideo(SubjectVO subjectVO, String locale) {
+		checkCourseMS(locale);
+		String jsonResponse = requestService.request(SubjectURLs.REMOVE_VIDEO, subjectVO, locale);
+		SubjectVO subject = new Gson().fromJson(jsonResponse, SubjectVO.class);
+		return subject;
+	}
+	
+	public List<SubjectVO> retrieveByVideo(SubjectVO subjectVO, String locale) {
+		checkCourseMS(locale);
+		String jsonResponse = requestService.request(SubjectURLs.RETRIEVE_BY_VIDEO, subjectVO, locale);
+		List<SubjectVO> subjects = new Gson().fromJson(jsonResponse, List.class);
+		return subjects;
 	}
 
 }

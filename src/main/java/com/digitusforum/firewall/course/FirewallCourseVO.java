@@ -8,7 +8,7 @@ import java.util.Map;
 import com.digitusforum.firewall.module.ModuleVO;
 import com.digitusforum.firewall.subject.SubjectVO;
 
-public class CourseVO {
+public class FirewallCourseVO {
 	private String courseId;
 	private String userId;
 	private String perfilId;

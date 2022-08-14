@@ -15,7 +15,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.digitusforum.firewall.course.CourseVO;
+import com.digitusforum.firewall.course.FirewallCourseVO;
 import com.digitusforum.firewall.i18.I18VO;
 import com.digitusforum.firewall.login.TokenVO;
 import com.digitusforum.firewall.module.ModuleVO;
@@ -40,42 +40,42 @@ public class RequestService {
 			throw ThrowService.doIt(locale, 503, M.COURSE_MICROSERVICE_OFFLINE);
 	}
 
-	public CourseVO createCourse(CourseVO courseVO, String locale) {
+	public FirewallCourseVO createCourse(FirewallCourseVO courseVO, String locale) {
 		checkCourseMS(locale);
 		String jsonResponse = request(MicroservicesURLs.COURSE_CREATE, courseVO, locale);
-		CourseVO course = new Gson().fromJson(jsonResponse, CourseVO.class);
+		FirewallCourseVO course = new Gson().fromJson(jsonResponse, FirewallCourseVO.class);
 		return course;
 	}
 	
-	public CourseVO delete(CourseVO courseVO, String locale) {
+	public FirewallCourseVO delete(FirewallCourseVO courseVO, String locale) {
 		checkCourseMS(locale);
 		String jsonResponse = request(MicroservicesURLs.COURSE_DELETE, courseVO, locale);
-		CourseVO course = new Gson().fromJson(jsonResponse, CourseVO.class);
+		FirewallCourseVO course = new Gson().fromJson(jsonResponse, FirewallCourseVO.class);
 		return course;
 	}
 
-	public List<CourseVO> retrieveCourses(String locale) {
+	public List<FirewallCourseVO> retrieveCourses(String locale) {
 		checkCourseMS(locale);
 		String jsonResponse = request(MicroservicesURLs.COURSE_RETRIEVE_ALL, locale);
-		List<CourseVO> courses = new Gson().fromJson(jsonResponse, List.class);
+		List<FirewallCourseVO> courses = new Gson().fromJson(jsonResponse, List.class);
 		return courses;
 	}
 
-	public CourseVO retrieveById(CourseVO courseVO, String locale) {
+	public FirewallCourseVO retrieveById(FirewallCourseVO courseVO, String locale) {
 		checkCourseMS(locale);
 		String jsonResponse = request(MicroservicesURLs.COURSE_RETRIEVE_BY_ID, courseVO, locale);
-		CourseVO course = new Gson().fromJson(jsonResponse, CourseVO.class);
+		FirewallCourseVO course = new Gson().fromJson(jsonResponse, FirewallCourseVO.class);
 		return course;
 	}
 	
-	public CourseVO retrieveSubjectsByCourseId(CourseVO courseVO, String locale) {
+	public FirewallCourseVO retrieveSubjectsByCourseId(FirewallCourseVO courseVO, String locale) {
 		checkCourseMS(locale);
 		String jsonResponse = request(MicroservicesURLs.COURSE_RETRIEVE_SUBJECTS_BY_COURSE_ID, courseVO, locale);
-		CourseVO course = new Gson().fromJson(jsonResponse, CourseVO.class);
+		FirewallCourseVO course = new Gson().fromJson(jsonResponse, FirewallCourseVO.class);
 		return course;
 	}
 
-	public List<ModuleVO> retrieveModulesWithVideosByCourseId(CourseVO courseVO, String locale) {
+	public List<ModuleVO> retrieveModulesWithVideosByCourseId(FirewallCourseVO courseVO, String locale) {
 		checkCourseMS(locale);
 		String jsonResponse = request(MicroservicesURLs.COURSE_RETRIEVE_MODULES_WITH_VIDEOS_BY_COURSE_ID, courseVO,
 				locale);
@@ -84,50 +84,15 @@ public class RequestService {
 	}
 
 	public TokenVO createToken(TokenVO tokenVO, String locale) {
-		String emailAndPassword = tokenVO.getEmail() + " " + tokenVO.getPassword();
-		switch (emailAndPassword) {
-			case "ricardo ricardo":
-				tokenVO.setTokenType("ricardo");
-				tokenVO.setToken("ricardo");
-				return tokenVO;
-			case "edilson edilson":
-				tokenVO.setTokenType("edilson");
-				tokenVO.setToken("edilson");
-				return tokenVO;
-			default: throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, M.LOGIN_WRONG_LOGIN_OR_PASSWORD);
-		}
-		
-		//checkLoginMS(locale);
-		//String jsonResponse = request(MicroservicesURLs.LOGIN_CREATE_TOKEN, tokenVO, locale);
-		//tokenVO = new Gson().fromJson(jsonResponse, TokenVO.class);
-		//return tokenVO;
-	}
-
-	public TokenVO validateToken(String authorization, String locale) {
-		System.out.println(authorization);
-		switch (authorization) {
-			case "ricardo ricardo": return null;
-			case "edilson edilson": return null;
-			default: throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, M.LOGIN_INVALID_TOKEN);
-		}
-		
-		//return null;
-		/*String[] tokenData = authorization.split(" ");
-		if (tokenData.length != 2)
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, M.LOGIN_INVALID_TOKEN);
-		TokenVO tokenVO = new TokenVO();
-		tokenVO.setToken(tokenData[1]);
-		tokenVO.setTokenType(tokenData[0]);
-		return validateToken(tokenVO, locale);*/
-	}
-
-	public TokenVO validateToken(TokenVO tokenVO, String locale) {
 		checkLoginMS(locale);
-
-		String jsonResponse = request(MicroservicesURLs.LOGIN_VALIDATE_TOKEN, tokenVO, locale);
+		String jsonResponse = request(MicroservicesURLs.LOGIN_CREATE_TOKEN, tokenVO, locale);
 		tokenVO = new Gson().fromJson(jsonResponse, TokenVO.class);
 		return tokenVO;
 	}
+
+	
+
+	
 
 	public boolean isUp(String endpoint) {
 		String requestTimeId = TimeService.startCounting();
@@ -152,9 +117,27 @@ public class RequestService {
 		return request(endpoint, Timeouts.debug, requestEntityBody, Headers.DEFAULT(locale), locale);
 	}
 
+	//TODO separate the firewall.requestService
 	public String createUser(String endpoint, Object userVO, String locale) {
 		checkUserMS(locale);
 		return request(MicroservicesURLs.USER_CREATE, userVO, locale);
+	}
+	
+	//TODO this file looks horrible wrong, look at this ASAP
+	//TODO why not use the endpoint?
+	public String chat(String endpoint, Object chatVO, String locale) {
+		checkUserMS(locale);
+		return request(MicroservicesURLs.CHAT, chatVO, locale);
+	}
+	
+	public String conversations(String endpoint, Object chatVO, String locale) {
+		checkUserMS(locale);
+		return request(MicroservicesURLs.CONVERSATIONS, chatVO, locale);
+	}
+	
+	public String conversation(String endpoint, Object chatVO, String locale) {
+		checkUserMS(locale);
+		return request(MicroservicesURLs.CONVERSATION, chatVO, locale);
 	}
 
 	public String request(String endpoint, int timeout, Object requestEntityBody, MultiValueMap<String, String> headers,
@@ -182,7 +165,7 @@ public class RequestService {
 		String cacheKey = i18.getKey() + "." + i18.getLocale();
 		updateCache(i18, cacheKey);
 		return i18MessagesCache.get(cacheKey) != null ? i18MessagesCache.get(cacheKey)
-				: "Internationalization service is down, sorry for the inconvenience - message key = " + i18.getKey();
+				: "message key 3 = " + i18.getKey();
 	}
 
 	private void updateCache(I18VO i18, String cacheKey) {

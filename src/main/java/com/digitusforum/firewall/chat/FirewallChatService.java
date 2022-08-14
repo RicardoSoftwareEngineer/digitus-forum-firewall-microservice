@@ -1,7 +1,10 @@
-package com.digitusforum.firewall.user;
+package com.digitusforum.firewall.chat;
+
+import java.util.List;
 
 import org.springframework.web.client.HttpClientErrorException;
 
+import com.digitusforum.firewall.module.ModuleVO;
 import com.digitusforum.firewall.util.M;
 import com.digitusforum.firewall.util.MicroservicesURLs;
 import com.digitusforum.firewall.util.RequestService;
@@ -9,10 +12,10 @@ import com.digitusforum.firewall.util.ThrowService;
 import com.google.gson.Gson;
 
 //todo pllleaase make this in kotlin, we are flying so high, so fast and so sophisticated that i would say simple
-public class UserService {
+public class FirewallChatService {
 	private RequestService requestService;
 
-	public UserService(RequestService requestService) {
+	public FirewallChatService(RequestService requestService) {
 		this.requestService = requestService;
 	}
 
@@ -21,19 +24,33 @@ public class UserService {
 			throw ThrowService.doIt(locale, 503, M.USER_MICROSERVICE_OFFLINE);
 	}
 
-	public UserVO createUser(UserVO userVO, String locale) {
+	public FirewallChatMessageVO chat(FirewallChatMessageVO chatVO, String locale) {
 		checkUserMS(locale);
-		String jsonResponse = requestService.createUser(MicroservicesURLs.USER_CREATE, userVO, locale);
-		return new Gson().fromJson(jsonResponse, UserVO.class);
+		String jsonResponse = requestService.chat(MicroservicesURLs.CHAT, chatVO, locale);
+		return new Gson().fromJson(jsonResponse, FirewallChatMessageVO.class);
+	}
+	
+	public List<FirewallChatSubjectVO> conversations(FirewallChatMessageVO chatVO, String locale) {
+		checkUserMS(locale);
+		String jsonResponse = requestService.conversations(MicroservicesURLs.CONVERSATIONS, chatVO, locale);
+		List<FirewallChatSubjectVO> conversations = new Gson().fromJson(jsonResponse, List.class);
+		return conversations;
+	}
+	
+	public List<FirewallChatMessageVO> conversation(FirewallChatMessageVO chatVO, String locale) {
+		checkUserMS(locale);
+		String jsonResponse = requestService.conversation(MicroservicesURLs.CONVERSATION, chatVO, locale);
+		List<FirewallChatMessageVO> conversation = new Gson().fromJson(jsonResponse, List.class);
+		return conversation;
 	}
 
-	public UserVO[] retrieveUsers(String locale) {
+	public FirewallChatMessageVO[] retrieveUsers(String locale) {
 		checkUserMS(locale);
 		String jsonResponse = requestService.request(MicroservicesURLs.USER_RETRIEVE_USERS, locale);
-		return new Gson().fromJson(jsonResponse, UserVO[].class);
+		return new Gson().fromJson(jsonResponse, FirewallChatMessageVO[].class);
 	}
 
-	public UserVO retrieveUserById(String locale, int id) {
+	public FirewallChatMessageVO retrieveUserById(String locale, int id) {
 		checkUserMS(locale);
 		String jsonResponse = null;
 		try {
@@ -43,10 +60,10 @@ public class UserService {
 			if (e.getRawStatusCode() == 404)
 				throw ThrowService.doIt(locale, 404, M.USER_NOT_FOUND);
 		}
-		return new Gson().fromJson(jsonResponse, UserVO.class);
+		return new Gson().fromJson(jsonResponse, FirewallChatMessageVO.class);
 	}
 
-	public UserVO updateUser(String locale, int id, UserVO userVO) {
+	public FirewallChatMessageVO updateUser(String locale, int id, FirewallChatMessageVO userVO) {
 		checkUserMS(locale);
 		String jsonResponse = null;
 		try {
@@ -58,10 +75,10 @@ public class UserService {
 			if (e.getRawStatusCode() == 403)
 				throw ThrowService.doIt(locale, 403, M.USER_EMAIL_ALREADY_IN_USE);
 		}
-		return new Gson().fromJson(jsonResponse, UserVO.class);
+		return new Gson().fromJson(jsonResponse, FirewallChatMessageVO.class);
 	}
 
-	public UserVO deleteUser(String locale, int id) {
+	public FirewallChatMessageVO deleteUser(String locale, int id) {
 		checkUserMS(locale);
 		String jsonResponse = null;
 		try {
@@ -71,10 +88,10 @@ public class UserService {
 			if (e.getRawStatusCode() == 404)
 				throw ThrowService.doIt(locale, 404, M.USER_NOT_FOUND);
 		}
-		return new Gson().fromJson(jsonResponse, UserVO.class);
+		return new Gson().fromJson(jsonResponse, FirewallChatMessageVO.class);
 	}
 
-	public UserVO retrieveByEmailAndPassword(UserVO userVO, String locale) {
+	public FirewallChatMessageVO retrieveByEmailAndPassword(FirewallChatMessageVO userVO, String locale) {
 		checkUserMS(locale);
 		String jsonResponse = null;
 		try {
@@ -84,6 +101,6 @@ public class UserService {
 			if (e.getRawStatusCode() == 404)
 				throw ThrowService.doIt(locale, 404, M.USER_NOT_FOUND);
 		}
-		return new Gson().fromJson(jsonResponse, UserVO.class);
+		return new Gson().fromJson(jsonResponse, FirewallChatMessageVO.class);
 	}
 }

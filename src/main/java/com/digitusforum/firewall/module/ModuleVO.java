@@ -12,10 +12,19 @@ public class ModuleVO {
 	private String videoId;
 	private int number;
 	private int newNumber;
+	private int newPosition;
 	private String name;
 	private String sinopse;
 	private String description;
 	private List<VideoVO> videos = new ArrayList<>();
+
+	public int getNewPosition() {
+		return newPosition;
+	}
+
+	public void setNewPosition(int newPosition) {
+		this.newPosition = newPosition;
+	}
 
 	public String getVideoId() {
 		return videoId;

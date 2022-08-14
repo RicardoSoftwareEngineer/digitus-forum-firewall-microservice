@@ -15,15 +15,15 @@ import com.digitusforum.firewall.util.RequestService;
 
 
 @RestController
-public class UserController {
+public class FirewallUserController {
 	// LoginMicroservice loginMicroservice = new LoginMicroservice(new
 	// RequestService());
-	UserService userService = new UserService(new RequestService());
+	FirewallUserService userService = new FirewallUserService(new RequestService());
 	RequestService requesService = new RequestService();
 
 	@PostMapping(value = "/firewall/user/v1/create")
 	public Object create(@RequestHeader(defaultValue = "en_us") String locale, @RequestHeader String authorization,
-			@RequestBody UserVO userVO) {
+			@RequestBody FirewallUserVO userVO) {
 		return userService.createUser(userVO, locale);
 	}
 
@@ -42,7 +42,7 @@ public class UserController {
 
 	@RequestMapping(value = "/firewall/user/v1/{id}/update")
 	public Object update(@RequestHeader(defaultValue = "en_us") String locale, @RequestHeader String Authorization,
-			@PathVariable Optional<Integer> id, @RequestBody UserVO userVO) {
+			@PathVariable Optional<Integer> id, @RequestBody FirewallUserVO userVO) {
 		// UserVO loggedUser = loginMicroservice.validateToken(Authorization, locale);
 		return userService.updateUser(locale, id.get(), userVO);
 	}

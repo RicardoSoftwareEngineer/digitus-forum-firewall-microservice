@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.digitusforum.firewall.user.UserVO;
+import com.digitusforum.firewall.user.FirewallUserVO;
 import com.digitusforum.firewall.util.M;
 import com.digitusforum.firewall.util.MicroservicesURLs;
 import com.digitusforum.firewall.util.RequestService;
@@ -18,7 +18,7 @@ public class LoginMicroserviceDEPRECATED {
 		this.requestService = requestService;
 	}
 
-	public UserVO loginWithEmailAndPassword(UserVO userVO, String locale) {
+	public FirewallUserVO loginWithEmailAndPassword(FirewallUserVO userVO, String locale) {
 		if (StringUtils.isBlank(userVO.getEmail()))
 			throw ThrowService.doIt(locale, 403, M.LOGIN_MISSING_EMAIL);
 		if (StringUtils.isBlank(userVO.getPassword()))
@@ -26,7 +26,7 @@ public class LoginMicroserviceDEPRECATED {
 		if (!requestService.isUp(MicroservicesURLs.LOGIN))
 			throw ThrowService.doIt(locale, 503, M.LOGIN_MICROSERVICE_OFFLINE);
 
-		ResponseEntity<? extends UserVO> response = null;
+		ResponseEntity<? extends FirewallUserVO> response = null;
 		try {
 			// response = (ResponseEntity<? extends UserVO>) requestService.hitIt(
 			// MicroservicesURLs.LOGIN_BY_EMAIL_AND_PASSWORD, Timeouts.ideal, userVO,
@@ -38,15 +38,15 @@ public class LoginMicroserviceDEPRECATED {
 		return response.getBody();
 	}
 
-	public UserVO validateToken(String token, String locale) {
+	public FirewallUserVO validateToken(String token, String locale) {
 		if (StringUtils.isBlank(token))
 			throw ThrowService.doIt(locale, 403, M.LOGIN_MISSING_TOKEN);
 		if (!requestService.isUp(MicroservicesURLs.LOGIN))
 			throw ThrowService.doIt(locale, 503, M.LOGIN_MICROSERVICE_OFFLINE);
 
-		UserVO userVO = new UserVO();
+		FirewallUserVO userVO = new FirewallUserVO();
 		userVO.setToken(token);
-		ResponseEntity<? extends UserVO> response = null;
+		ResponseEntity<? extends FirewallUserVO> response = null;
 		try {
 			// response = (ResponseEntity<? extends UserVO>)
 			// requestService.hitIt(MicroservicesURLs.LOGIN_VALIDATE_TOKEN,

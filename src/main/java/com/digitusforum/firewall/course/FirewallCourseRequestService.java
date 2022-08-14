@@ -14,7 +14,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.digitusforum.firewall.course.CourseVO;
+import com.digitusforum.firewall.course.FirewallCourseVO;
 import com.digitusforum.firewall.i18.I18VO;
 import com.digitusforum.firewall.login.TokenVO;
 import com.digitusforum.firewall.util.ErrorMessageVO;
@@ -26,7 +26,7 @@ import com.digitusforum.firewall.util.TimeService;
 import com.digitusforum.firewall.util.Timeouts;
 import com.google.gson.Gson;
 
-public class CourseRequestService {
+public class FirewallCourseRequestService {
 	private Map<String, String> i18MessagesCache = new HashMap<>();
 
 	private void checkCourseMS(String locale) {
@@ -34,10 +34,10 @@ public class CourseRequestService {
 			throw ThrowService.doIt(locale, 503, M.COURSE_MICROSERVICE_OFFLINE);
 	}
 
-	public List<CourseVO> retrieveAll(String locale) {
+	public List<FirewallCourseVO> retrieveAll(String locale) {
 		checkCourseMS(locale);
 		String jsonResponse = request(MicroservicesURLs.COURSE_RETRIEVE_ALL, locale);
-		List<CourseVO> courses = new Gson().fromJson(jsonResponse, List.class);
+		List<FirewallCourseVO> courses = new Gson().fromJson(jsonResponse, List.class);
 		return courses;
 	}
 
@@ -90,7 +90,7 @@ public class CourseRequestService {
 		String cacheKey = i18.getKey() + "." + i18.getLocale();
 		updateCache(i18, cacheKey);
 		return i18MessagesCache.get(cacheKey) != null ? i18MessagesCache.get(cacheKey)
-				: "Internationalization service is down, sorry for the inconvenience - message key = " + i18.getKey();
+				: "message key 1 = " + i18.getKey();
 	}
 
 	private void updateCache(I18VO i18, String cacheKey) {

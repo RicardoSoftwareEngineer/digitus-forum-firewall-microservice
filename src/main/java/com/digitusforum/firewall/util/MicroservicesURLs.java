@@ -1,6 +1,6 @@
 package com.digitusforum.firewall.util;
 
-
+//TODO deixar de usar esse cara e usar uma classe dessa pra cada pacote
 public class MicroservicesURLs {
 	public static String I18 = EnvironmentService.I18_SERVER_URL + EnvironmentService.I18_SERVER_PORT + "/i18" + EnvironmentService.I18_SERVER_VERSION;
 	
@@ -16,6 +16,9 @@ public class MicroservicesURLs {
 	public static String USER_RETRIEVE_BY_ID = USER + "/%s/retrieve"; 
 	public static String USER_UPDATE = USER + "/%s/update"; 
 	public static String USER_DELETE = USER + "/%s/delete"; 
+	public static String CHAT = USER + "/chat"; 
+	public static String CONVERSATIONS = USER + "/conversations"; 
+	public static String CONVERSATION = USER + "/conversation"; 
 	
 	public static String PERFIL = EnvironmentService.PERFIL_SERVER_URL + EnvironmentService.PERFIL_SERVER_PORT + "/perfil" + EnvironmentService.PERFIL_SERVER_VERSION;
 	public static String PERFIL_RETRIEVE_LAST_USED = PERFIL + "/retrieve/lastUsed"; 
