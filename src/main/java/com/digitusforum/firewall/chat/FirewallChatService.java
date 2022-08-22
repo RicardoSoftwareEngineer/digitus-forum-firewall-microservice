@@ -24,10 +24,10 @@ public class FirewallChatService {
 			throw ThrowService.doIt(locale, 503, M.USER_MICROSERVICE_OFFLINE);
 	}
 
-	public FirewallChatMessageVO chat(FirewallChatMessageVO chatVO, String locale) {
+	public FirewallChatConversationVO chat(FirewallChatMessageVO chatVO, String locale) {
 		checkUserMS(locale);
 		String jsonResponse = requestService.chat(MicroservicesURLs.CHAT, chatVO, locale);
-		return new Gson().fromJson(jsonResponse, FirewallChatMessageVO.class);
+		return new Gson().fromJson(jsonResponse, FirewallChatConversationVO.class);
 	}
 	
 	public List<FirewallChatSubjectVO> conversations(FirewallChatMessageVO chatVO, String locale) {
@@ -37,10 +37,10 @@ public class FirewallChatService {
 		return conversations;
 	}
 	
-	public List<FirewallChatMessageVO> conversation(FirewallChatMessageVO chatVO, String locale) {
+	public FirewallChatConversationVO conversation(FirewallChatMessageVO chatVO, String locale) {
 		checkUserMS(locale);
 		String jsonResponse = requestService.conversation(MicroservicesURLs.CONVERSATION, chatVO, locale);
-		List<FirewallChatMessageVO> conversation = new Gson().fromJson(jsonResponse, List.class);
+		FirewallChatConversationVO conversation = new Gson().fromJson(jsonResponse, FirewallChatConversationVO.class);
 		return conversation;
 	}
 

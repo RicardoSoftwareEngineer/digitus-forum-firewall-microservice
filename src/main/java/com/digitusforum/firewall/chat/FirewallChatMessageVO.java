@@ -6,13 +6,32 @@ public class FirewallChatMessageVO {
 	private String userId;
 	private String userName;
 	private String userEmail;
+	private String userType;
 	private String chatMessageId;
 	private String name;
 	private String message;
 	private String status;
+	private int position;
+	
 	private boolean deleted;
 
 	public FirewallChatMessageVO() {
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
+	}
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
 
 	public String getUserEmail() {

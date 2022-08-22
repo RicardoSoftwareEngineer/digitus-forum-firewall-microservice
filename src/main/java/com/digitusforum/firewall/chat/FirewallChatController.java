@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -22,32 +21,32 @@ public class FirewallChatController {
 
 	@CrossOrigin
 	@PostMapping(value = "/firewall/user/v1/chat")
-	public FirewallChatMessageVO chat(@RequestHeader(defaultValue = "pt_br") String locale, @RequestHeader String authorization,
-			@RequestBody FirewallChatMessageVO chatVO) {
+	public FirewallChatConversationVO chat(@RequestHeader(defaultValue = "pt_br") String locale,
+			@RequestHeader String authorization, @RequestBody FirewallChatMessageVO chatVO) {
 		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
 		chatVO.setUserId(tokenVO.getUserId());
 		chatVO.setUserName(tokenVO.getUserName());
 		chatVO.setUserEmail(tokenVO.getEmail());
+		chatVO.setUserType(tokenVO.getUserType());
 		return chatService.chat(chatVO, locale);
 	}
-	
+
 	@CrossOrigin
 	@PostMapping(value = "/firewall/user/v1/conversations")
-	public List<FirewallChatSubjectVO> conversations(@RequestHeader(defaultValue = "pt_br") String locale, @RequestHeader String authorization,
-			@RequestBody FirewallChatMessageVO chatVO) {
+	public List<FirewallChatSubjectVO> conversations(@RequestHeader(defaultValue = "pt_br") String locale,
+			@RequestHeader String authorization, @RequestBody FirewallChatMessageVO chatVO) {
 		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
 		chatVO.setUserId(tokenVO.getUserId());
 		return chatService.conversations(chatVO, locale);
 	}
-	
+
 	@CrossOrigin
 	@PostMapping(value = "/firewall/user/v1/conversation")
-	public List<FirewallChatMessageVO> conversation(@RequestHeader(defaultValue = "pt_br") String locale, @RequestHeader String authorization,
-			@RequestBody FirewallChatMessageVO chatVO) {
+	public FirewallChatConversationVO conversation(@RequestHeader(defaultValue = "pt_br") String locale,
+			@RequestHeader String authorization, @RequestBody FirewallChatMessageVO chatVO) {
 		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
 		chatVO.setUserId(tokenVO.getUserId());
 		return chatService.conversation(chatVO, locale);
 	}
 
-	
 }
