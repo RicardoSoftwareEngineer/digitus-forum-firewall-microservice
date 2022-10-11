@@ -130,6 +130,11 @@ public class RequestService {
 		return request(MicroservicesURLs.CHAT, chatVO, locale);
 	}
 	
+	public String sup(String endpoint, Object chatVO, String locale) {
+		checkUserMS(locale);
+		return request(MicroservicesURLs.SUP, chatVO, locale);
+	}
+	
 	public String conversations(String endpoint, Object chatVO, String locale) {
 		checkUserMS(locale);
 		return request(MicroservicesURLs.CONVERSATIONS, chatVO, locale);

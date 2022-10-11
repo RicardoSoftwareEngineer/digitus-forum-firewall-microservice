@@ -17,6 +17,7 @@ public class MicroservicesURLs {
 	public static String USER_UPDATE = USER + "/%s/update"; 
 	public static String USER_DELETE = USER + "/%s/delete"; 
 	public static String CHAT = USER + "/chat"; 
+	public static String SUP = USER + "/sup"; 
 	public static String CONVERSATIONS = USER + "/conversations"; 
 	public static String CONVERSATION = USER + "/conversation"; 
 	

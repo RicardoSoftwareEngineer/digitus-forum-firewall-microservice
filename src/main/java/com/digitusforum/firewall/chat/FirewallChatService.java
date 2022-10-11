@@ -23,6 +23,21 @@ public class FirewallChatService {
 		if (!requestService.isUp(MicroservicesURLs.USER))
 			throw ThrowService.doIt(locale, 503, M.USER_MICROSERVICE_OFFLINE);
 	}
+	
+	public FirewallChatConversationVO sup(FirewallChatMessageVO chatVO, String locale) {
+		checkUserMS(locale);
+		int i = 1;
+		while(i < 20002) {
+			chatVO.setFrom(i);
+			chatVO.setTo(i+3);
+			requestService.sup(MicroservicesURLs.SUP, chatVO, locale);
+			i = i +3;
+		}
+			
+		
+		return new FirewallChatConversationVO();
+	}
+	
 
 	public FirewallChatConversationVO chat(FirewallChatMessageVO chatVO, String locale) {
 		checkUserMS(locale);

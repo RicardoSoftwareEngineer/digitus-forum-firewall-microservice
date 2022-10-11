@@ -20,6 +20,13 @@ public class FirewallChatController {
 	FirewallLoginService firewallLoginService = new FirewallLoginService();
 
 	@CrossOrigin
+	@PostMapping(value = "/firewall/sup")
+	public String sup( @RequestBody FirewallChatMessageVO chatVO) {
+		chatService.sup(chatVO, "en_US");
+		return "sup";
+	}
+	
+	@CrossOrigin
 	@PostMapping(value = "/firewall/user/v1/chat")
 	public FirewallChatConversationVO chat(@RequestHeader(defaultValue = "pt_br") String locale,
 			@RequestHeader String authorization, @RequestBody FirewallChatMessageVO chatVO) {

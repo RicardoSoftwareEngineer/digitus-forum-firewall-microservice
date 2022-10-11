@@ -11,11 +11,38 @@ public class FirewallChatMessageVO {
 	private String name;
 	private String message;
 	private String status;
+	private String alignment;
 	private int position;
+	private int from;
+	private int to;
 	
 	private boolean deleted;
 
 	public FirewallChatMessageVO() {
+	}
+
+	public int getFrom() {
+		return from;
+	}
+
+	public void setFrom(int from) {
+		this.from = from;
+	}
+
+	public int getTo() {
+		return to;
+	}
+
+	public void setTo(int to) {
+		this.to = to;
+	}
+
+	public String getAlignment() {
+		return alignment;
+	}
+
+	public void setAlignment(String alignment) {
+		this.alignment = alignment;
 	}
 
 	public int getPosition() {
