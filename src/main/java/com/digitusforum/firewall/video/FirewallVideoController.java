@@ -1,19 +1,18 @@
 package com.digitusforum.firewall.video;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.digitusforum.firewall.course.FirewallCourseVO;
 import com.digitusforum.firewall.login.FirewallLoginService;
 import com.digitusforum.firewall.login.TokenVO;
-import com.digitusforum.firewall.util.RequestService;
 
 @RestController
 public class FirewallVideoController {
@@ -32,13 +31,17 @@ public class FirewallVideoController {
 		videoVO.setUserId(tokenVO.getUserId());
 		return videoRequestService.create(videoVO, locale);
 	}
-
+	Map<String, VideoVO> cache = new HashMap<String, VideoVO>();
 	@CrossOrigin
 	@PostMapping(value = "/firewall/video/v1/retrieveById")
 	public VideoVO retrieveById(@RequestHeader(defaultValue = "en_us") String locale,
 			@RequestHeader String authorization, @RequestBody VideoVO videoVO) {
-		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
-		return videoRequestService.retrieveById(videoVO, locale);
+		String cacheKey = "retrieveById_videoId_" + videoVO.getVideoId();
+		if(!cache.containsKey(cacheKey)){
+			cache.put(cacheKey, videoRequestService.retrieveById(videoVO, locale));
+		}
+		//TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
+		return cache.get(cacheKey);
 	}
 
 	@CrossOrigin

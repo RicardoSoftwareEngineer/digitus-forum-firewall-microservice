@@ -19,8 +19,6 @@ public class FirewallCourseVO {
 	private List<SubjectVO> subjects = new ArrayList<>();
 	private List<ModuleVO> modules = new ArrayList<>();
 
-	
-
 	public List<SubjectVO> getSubjects() {
 		return subjects;
 	}

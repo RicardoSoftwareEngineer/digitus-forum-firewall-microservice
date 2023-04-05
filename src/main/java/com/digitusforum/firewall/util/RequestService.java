@@ -1,12 +1,13 @@
 package com.digitusforum.firewall.util;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.*;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
@@ -163,6 +164,30 @@ public class RequestService {
 			String i18Message = getMessageByKey(locale, errorMessageVO.getMessage());
 			throw new ResponseStatusException(e.getStatusCode(), i18Message);
 		}
+	}
+
+	public boolean captchaIsValid(String captchaToken){
+		OkHttpClient client = new OkHttpClient().newBuilder()
+				.build();
+		MediaType mediaType = MediaType.parse("text/plain");
+		RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+				.addFormDataPart("secret","6LfG1Y8jAAAAADp084qM4zlTb_pbQS1px6ud8GT-")
+				.addFormDataPart("response", captchaToken)
+				.build();
+		Request request = new Request.Builder()
+				.url("https://www.google.com/recaptcha/api/siteverify")
+				.method("POST", body)
+				.build();
+		try {
+			Response response = client.newCall(request).execute();
+			String resp = response.body().string();
+			if(resp.contains("true")){
+				return true;
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return false;
 	}
 
 	public String getMessageByKey(String locale, String key) {

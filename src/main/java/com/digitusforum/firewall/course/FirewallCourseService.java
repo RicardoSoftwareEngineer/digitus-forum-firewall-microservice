@@ -22,6 +22,7 @@ public class FirewallCourseService {
 	}
 	
 	public FirewallCourseVO retrieveSubjectsByCourseId(FirewallCourseVO courseVO, String locale) {
+		System.out.println("firewall fez a requisição pra atualizar o cache");
 		return requestService.retrieveSubjectsByCourseId(courseVO, locale);
 	}
 	

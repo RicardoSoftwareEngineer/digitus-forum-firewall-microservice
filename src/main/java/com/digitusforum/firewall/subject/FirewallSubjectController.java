@@ -1,6 +1,8 @@
 package com.digitusforum.firewall.subject;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.digitusforum.firewall.login.FirewallLoginService;
 import com.digitusforum.firewall.login.TokenVO;
-import com.digitusforum.firewall.util.RequestService;
 
 @RestController
 public class FirewallSubjectController {
@@ -21,22 +22,31 @@ public class FirewallSubjectController {
 	FirewallLoginService firewallLoginService;
 
 	// $$$$$$$$$$$$$$$$$$$$ Public methods $$$$$$$$$$$$$$$$$$$$
-
+	Map<String, List<SubjectVO>> cache = new HashMap<String, List<SubjectVO>>();
 	@CrossOrigin
 	@PostMapping(value = "/firewall/subject/v1/retrieveByVideo")
 	public List<SubjectVO> retrieveByVideo(@RequestHeader(defaultValue = "en_us") String locale,
 			@RequestHeader String authorization, @RequestBody SubjectVO subjectVO) {
-		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
-		return subjectRequestService.retrieveByVideo(subjectVO, locale);
+		String cacheKey = "retrieveByVideo_videoId_" + subjectVO.getVideoId();
+		if(!cache.containsKey(cacheKey)){
+			cache.put(cacheKey, subjectRequestService.retrieveByVideo(subjectVO, locale));
+		}
+		//TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
+		return cache.get(cacheKey);
 	}
 
 	@CrossOrigin
 	@PostMapping(value = "/firewall/subject/v1/retrieveByCourseId")
 	public List<SubjectVO> retrieveById(@RequestHeader(defaultValue = "en_us") String locale,
 			@RequestHeader String authorization, @RequestBody SubjectVO subjectVO) {
-		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
-		subjectVO.setUserId(tokenVO.getUserId());
-		return subjectRequestService.retrieveByCourseId(subjectVO, locale);
+
+		String cacheKey = "retrieveByCourseId_videoId_" + subjectVO.getVideoId();
+		if(!cache.containsKey(cacheKey)){
+			subjectVO.setUserId("41ff8cf6-4b14-45c5-8d0a-f9a3a7d24e85");
+			cache.put(cacheKey, subjectRequestService.retrieveByCourseId(subjectVO, locale));
+		}
+		//TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
+		return cache.get(cacheKey);
 	}
 
 	@CrossOrigin

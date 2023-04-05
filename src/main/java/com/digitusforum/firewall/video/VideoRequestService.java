@@ -33,6 +33,7 @@ public class VideoRequestService {
 	}
 
 	public VideoVO retrieveById(VideoVO videoVO, String locale) {
+		System.out.println("Firewall microservice will make a request to update cache");
 		checkCourseMS(locale);
 		String jsonResponse = requestService.request(VideoURLs.RETRIEVE_BY_ID, videoVO, locale);
 		VideoVO video = new Gson().fromJson(jsonResponse, VideoVO.class);

@@ -1,19 +1,18 @@
 package com.digitusforum.firewall.module;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.digitusforum.firewall.course.FirewallCourseVO;
 import com.digitusforum.firewall.login.FirewallLoginService;
 import com.digitusforum.firewall.login.TokenVO;
-import com.digitusforum.firewall.util.RequestService;
 
 @RestController
 public class FirewallModuleController {
@@ -21,6 +20,8 @@ public class FirewallModuleController {
 	ModuleRequestService moduleRequestService;
 	@Autowired
 	FirewallLoginService firewallLoginService;
+
+	Map<String, List<ModuleVO>> cache = new HashMap<String, List<ModuleVO>>();
 
 	@CrossOrigin
 	@PostMapping(value = "/firewall/module/v1/create")
@@ -53,9 +54,14 @@ public class FirewallModuleController {
 	@PostMapping(value = "/firewall/module/v1/retrieveByCourseIdWithVideos")
 	public List<ModuleVO> retrieveModulesWithVideosByCourseId(@RequestHeader(defaultValue = "en_us") String locale,
 			@RequestHeader String authorization, @RequestBody ModuleVO moduleVO) {
-		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
-		moduleVO.setUserId(tokenVO.getUserId());
-		return moduleRequestService.retrieveByCourseIdWithVideos(moduleVO, locale);
+		String cacheKey = "retrieveByCourseIdWithVideos_courseId_" + moduleVO.getCourseId();
+		if(!cache.containsKey(cacheKey)){
+			moduleVO.setUserId("41ff8cf6-4b14-45c5-8d0a-f9a3a7d24e85");
+			cache.put(cacheKey, moduleRequestService.retrieveByCourseIdWithVideos(moduleVO, locale));
+		}
+		//TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
+		//moduleVO.setUserId(tokenVO.getUserId());
+		return cache.get(cacheKey);
 	}
 	
 	@CrossOrigin
@@ -98,8 +104,8 @@ public class FirewallModuleController {
 	@PostMapping(value = "/firewall/module/v1/removeVideo")
 	public ModuleVO removeVideo(@RequestHeader(defaultValue = "en_us") String locale, @RequestHeader String authorization,
 			@RequestBody ModuleVO moduleVO) {
-		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
-		moduleVO.setUserId(tokenVO.getUserId());
+		//TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
+		//moduleVO.setUserId(tokenVO.getUserId());
 		return moduleRequestService.removeVideo(moduleVO, locale);
 	}
 

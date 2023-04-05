@@ -3,6 +3,8 @@ package com.digitusforum.firewall.emailVerification;
 public class FirewallEmailVerificationVO {
 	private String emailVerificationId;
 	private String email;
+	private boolean success;
+	private String recaptchaToken;
 	private String password;
 	private String retypePassword;
 	private String response;
@@ -68,4 +70,19 @@ public class FirewallEmailVerificationVO {
 		this.used = used;
 	}
 
+	public String getRecaptchaToken() {
+		return recaptchaToken;
+	}
+
+	public void setRecaptchaToken(String recaptchaToken) {
+		this.recaptchaToken = recaptchaToken;
+	}
+
+	public boolean isSuccess() {
+		return success;
+	}
+
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
 }

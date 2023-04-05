@@ -1,6 +1,8 @@
 package com.digitusforum.firewall.course;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,7 +20,7 @@ import com.digitusforum.firewall.util.RequestService;
 public class FirewallCourseController {
 	// LoginMicroserviceDEPRECATED loginMicroservice = new
 	// LoginMicroserviceDEPRECATED(new RequestService());
-	
+	Map<String, FirewallCourseVO> cache = new HashMap<>();
 	FirewallCourseService courseService = new FirewallCourseService(new RequestService());
 	@Autowired
 	FirewallLoginService firewallLoginService = new FirewallLoginService();
@@ -52,8 +54,12 @@ public class FirewallCourseController {
 	@PostMapping(value = "/firewall/course/v1/retrieveSubjectsByCourseId")
 	public FirewallCourseVO retrieveSubjectsByCourseId(@RequestHeader(defaultValue = "en_us") String locale, @RequestHeader String authorization,
 			@RequestBody FirewallCourseVO courseVO) {
-		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
-		return courseService.retrieveSubjectsByCourseId(courseVO, locale);
+		String cacheKey = "retrieveSubjectsByCourseId_courseId_" + courseVO.getCourseId();
+		if(!cache.containsKey(cacheKey)){
+			cache.put(cacheKey, courseService.retrieveSubjectsByCourseId(courseVO, locale));
+		}
+		//TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
+		return cache.get(cacheKey);
 	}
 	
 	@CrossOrigin

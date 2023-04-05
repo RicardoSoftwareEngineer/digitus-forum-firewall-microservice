@@ -33,6 +33,7 @@ public class SubjectRequestService {
 	}
 
 	public List<SubjectVO> retrieveByCourseId(SubjectVO subjectVO, String locale) {
+		System.out.println("Firewall microservice will now make a request to update cache");
 		checkCourseMS(locale);
 		String jsonResponse = requestService.request(SubjectURLs.RETRIEVE_BY_COURSE_ID, subjectVO, locale);
 		List<SubjectVO> subjects = new Gson().fromJson(jsonResponse, List.class);
@@ -68,6 +69,7 @@ public class SubjectRequestService {
 	}
 	
 	public List<SubjectVO> retrieveByVideo(SubjectVO subjectVO, String locale) {
+		System.out.println("Firewall will make a request up update the cache");
 		checkCourseMS(locale);
 		String jsonResponse = requestService.request(SubjectURLs.RETRIEVE_BY_VIDEO, subjectVO, locale);
 		List<SubjectVO> subjects = new Gson().fromJson(jsonResponse, List.class);

@@ -47,6 +47,7 @@ public class ModuleRequestService {
 	}
 
 	public List<ModuleVO> retrieveByCourseIdWithVideos(ModuleVO moduleVO, String locale) {
+		System.out.println("Firewall microservice will make a request to update cache");
 		checkCourseMS(locale);
 		String jsonResponse = requestService.request(ModuleURLs.RETRIEVE_BY_COURSE_ID_WITH_VIDEOS, moduleVO,
 				locale);
