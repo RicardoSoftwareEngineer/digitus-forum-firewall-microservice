@@ -54,11 +54,12 @@ public class FirewallCourseController {
 	@PostMapping(value = "/firewall/course/v1/retrieveSubjectsByCourseId")
 	public FirewallCourseVO retrieveSubjectsByCourseId(@RequestHeader(defaultValue = "en_us") String locale, @RequestHeader String authorization,
 			@RequestBody FirewallCourseVO courseVO) {
-		String cacheKey = "retrieveSubjectsByCourseId_courseId_" + courseVO.getCourseId();
+		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
+		courseVO.setUserId(tokenVO.getUserId());
+		String cacheKey = "retrieveSubjectsByCourseId_courseId_" + courseVO.getCourseId() + "_user_" + tokenVO.getUserId();
 		if(!cache.containsKey(cacheKey)){
 			cache.put(cacheKey, courseService.retrieveSubjectsByCourseId(courseVO, locale));
 		}
-		//TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
 		return cache.get(cacheKey);
 	}
 	

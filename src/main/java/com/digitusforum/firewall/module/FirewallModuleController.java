@@ -54,13 +54,12 @@ public class FirewallModuleController {
 	@PostMapping(value = "/firewall/module/v1/retrieveByCourseIdWithVideos")
 	public List<ModuleVO> retrieveModulesWithVideosByCourseId(@RequestHeader(defaultValue = "en_us") String locale,
 			@RequestHeader String authorization, @RequestBody ModuleVO moduleVO) {
-		String cacheKey = "retrieveByCourseIdWithVideos_courseId_" + moduleVO.getCourseId();
+		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
+		moduleVO.setUserId(tokenVO.getUserId());
+		String cacheKey = "retrieveByCourseIdWithVideos_courseId_" + moduleVO.getCourseId() + "_user_" + tokenVO.getUserId();
 		if(!cache.containsKey(cacheKey)){
-			moduleVO.setUserId("41ff8cf6-4b14-45c5-8d0a-f9a3a7d24e85");
 			cache.put(cacheKey, moduleRequestService.retrieveByCourseIdWithVideos(moduleVO, locale));
 		}
-		//TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
-		//moduleVO.setUserId(tokenVO.getUserId());
 		return cache.get(cacheKey);
 	}
 	
@@ -104,8 +103,8 @@ public class FirewallModuleController {
 	@PostMapping(value = "/firewall/module/v1/removeVideo")
 	public ModuleVO removeVideo(@RequestHeader(defaultValue = "en_us") String locale, @RequestHeader String authorization,
 			@RequestBody ModuleVO moduleVO) {
-		//TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
-		//moduleVO.setUserId(tokenVO.getUserId());
+		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
+		moduleVO.setUserId(tokenVO.getUserId());
 		return moduleRequestService.removeVideo(moduleVO, locale);
 	}
 
