@@ -27,11 +27,12 @@ public class FirewallSubjectController {
 	@PostMapping(value = "/firewall/subject/v1/retrieveByVideo")
 	public List<SubjectVO> retrieveByVideo(@RequestHeader(defaultValue = "en_us") String locale,
 			@RequestHeader String authorization, @RequestBody SubjectVO subjectVO) {
-		String cacheKey = "retrieveByVideo_videoId_" + subjectVO.getVideoId();
+		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
+		subjectVO.setUserId(tokenVO.getUserId());
+		String cacheKey = "retrieveByVideo_videoId_" + subjectVO.getVideoId() + "_user_" + tokenVO.getUserId();
 		if(!cache.containsKey(cacheKey)){
 			cache.put(cacheKey, subjectRequestService.retrieveByVideo(subjectVO, locale));
 		}
-		//TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
 		return cache.get(cacheKey);
 	}
 
@@ -39,13 +40,12 @@ public class FirewallSubjectController {
 	@PostMapping(value = "/firewall/subject/v1/retrieveByCourseId")
 	public List<SubjectVO> retrieveById(@RequestHeader(defaultValue = "en_us") String locale,
 			@RequestHeader String authorization, @RequestBody SubjectVO subjectVO) {
-
-		String cacheKey = "retrieveByCourseId_videoId_" + subjectVO.getVideoId();
+		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
+		subjectVO.setUserId(tokenVO.getUserId());
+		String cacheKey = "retrieveByCourseId_courseId_" + subjectVO.getCourseId() + "_user_" + tokenVO.getUserId();
 		if(!cache.containsKey(cacheKey)){
-			subjectVO.setUserId("41ff8cf6-4b14-45c5-8d0a-f9a3a7d24e85");
 			cache.put(cacheKey, subjectRequestService.retrieveByCourseId(subjectVO, locale));
 		}
-		//TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
 		return cache.get(cacheKey);
 	}
 

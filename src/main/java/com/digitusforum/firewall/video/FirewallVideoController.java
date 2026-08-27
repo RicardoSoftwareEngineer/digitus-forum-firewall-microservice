@@ -36,11 +36,12 @@ public class FirewallVideoController {
 	@PostMapping(value = "/firewall/video/v1/retrieveById")
 	public VideoVO retrieveById(@RequestHeader(defaultValue = "en_us") String locale,
 			@RequestHeader String authorization, @RequestBody VideoVO videoVO) {
-		String cacheKey = "retrieveById_videoId_" + videoVO.getVideoId();
+		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
+		videoVO.setUserId(tokenVO.getUserId());
+		String cacheKey = "retrieveById_videoId_" + videoVO.getVideoId() + "_user_" + tokenVO.getUserId();
 		if(!cache.containsKey(cacheKey)){
 			cache.put(cacheKey, videoRequestService.retrieveById(videoVO, locale));
 		}
-		//TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
 		return cache.get(cacheKey);
 	}
 
