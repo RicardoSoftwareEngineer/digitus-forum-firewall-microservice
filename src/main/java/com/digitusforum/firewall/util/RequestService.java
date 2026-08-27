@@ -169,9 +169,12 @@ public class RequestService {
 	public boolean captchaIsValid(String captchaToken){
 		OkHttpClient client = new OkHttpClient().newBuilder()
 				.build();
-		MediaType mediaType = MediaType.parse("text/plain");
+		String recaptchaSecret = System.getenv("RECAPTCHA_SECRET");
+		if (recaptchaSecret == null || recaptchaSecret.isEmpty()) {
+			return false;
+		}
 		RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-				.addFormDataPart("secret","6LfG1Y8jAAAAADp084qM4zlTb_pbQS1px6ud8GT-")
+				.addFormDataPart("secret", recaptchaSecret)
 				.addFormDataPart("response", captchaToken)
 				.build();
 		Request request = new Request.Builder()
