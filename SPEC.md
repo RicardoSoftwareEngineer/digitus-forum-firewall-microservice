@@ -19,7 +19,7 @@ data: 2026-08-28
 ## REGRA
 - REGRA-EDGE-1: só o firewall fala com a internet. MS 8081–8088 não são API pública.
 - REGRA-AUTH-1: token = UUID em cache neste processo. **Não JWT.**
-- REGRA-AUTH-2: header `Authorization` tem **duas** partes separadas por espaço; a segunda é o UUID (`Bearer <uuid>`). String vazia ou um único token = inválido. Token **não** vai em cookie (front: `sessionStorage`; ver frontend REGRA-TOKEN-STORE).
+- REGRA-AUTH-2: header `Authorization` tem **duas** partes separadas por espaço; a segunda é o UUID (`Bearer <uuid>`). String vazia ou um único token = inválido. Token **não** vai em cookie (front: `localStorage`; ver frontend REGRA-TOKEN-STORE).
 - REGRA-AUTH-3: **mutação** (create/update/delete/reorder) de curso/módulo/assunto/vídeo/link/user/chat exige token.
 - REGRA-AUTH-FREE: leitura de **curso gratuito** (course/module/video/link) na borda é pública, sem token.
 - REGRA-AUTH-PAID: leitura de **curso pago** exige token válido + user logado + compra/matrícula daquele `courseId`.
