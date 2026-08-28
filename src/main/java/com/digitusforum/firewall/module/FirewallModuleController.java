@@ -42,23 +42,23 @@ public class FirewallModuleController {
 	}
 
 	@CrossOrigin
-	@PostMapping(value = "/firewall/module/v1/retrieveByCourseId")
-	public List<ModuleVO> retrieveByCourseId(@RequestHeader(defaultValue = "en_us") String locale,
+	@PostMapping(value = "/firewall/module/v1/retrieveByTrainingId")
+	public List<ModuleVO> retrieveByTrainingId(@RequestHeader(defaultValue = "en_us") String locale,
 			@RequestHeader String authorization, @RequestBody ModuleVO moduleVO) {
 		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
 		moduleVO.setUserId(tokenVO.getUserId());
-		return moduleRequestService.retrieveByCourseId(moduleVO, locale);
+		return moduleRequestService.retrieveByTrainingId(moduleVO, locale);
 	}
 
 	@CrossOrigin
-	@PostMapping(value = "/firewall/module/v1/retrieveByCourseIdWithVideos")
-	public List<ModuleVO> retrieveModulesWithVideosByCourseId(@RequestHeader(defaultValue = "en_us") String locale,
+	@PostMapping(value = "/firewall/module/v1/retrieveByTrainingIdWithVideos")
+	public List<ModuleVO> retrieveModulesWithVideosByTrainingId(@RequestHeader(defaultValue = "en_us") String locale,
 			@RequestHeader String authorization, @RequestBody ModuleVO moduleVO) {
 		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
 		moduleVO.setUserId(tokenVO.getUserId());
-		String cacheKey = "retrieveByCourseIdWithVideos_courseId_" + moduleVO.getCourseId() + "_user_" + tokenVO.getUserId();
+		String cacheKey = "retrieveByTrainingIdWithVideos_trainingId_" + moduleVO.getTrainingId() + "_user_" + tokenVO.getUserId();
 		if(!cache.containsKey(cacheKey)){
-			cache.put(cacheKey, moduleRequestService.retrieveByCourseIdWithVideos(moduleVO, locale));
+			cache.put(cacheKey, moduleRequestService.retrieveByTrainingIdWithVideos(moduleVO, locale));
 		}
 		return cache.get(cacheKey);
 	}
@@ -111,34 +111,34 @@ public class FirewallModuleController {
 	/*
 	 * @CrossOrigin
 	 * 
-	 * @GetMapping(value = "/firewall/course/v1/retrieveAll") public List<CourseVO>
+	 * @GetMapping(value = "/firewall/training/v1/retrieveAll") public List<TrainingVO>
 	 * retrieve(@RequestHeader(defaultValue = "en_us") String locale,
 	 * 
 	 * @RequestHeader String authorization) { TokenVO tokenVO =
 	 * requestService.validateToken(authorization, locale); return
-	 * courseService.retrieveAll(locale); }
+	 * trainingService.retrieveAll(locale); }
 	 * 
 	 * @CrossOrigin
 	 * 
-	 * @GetMapping(value = "/firewall/course/v1/retrieveById") public CourseVO
+	 * @GetMapping(value = "/firewall/training/v1/retrieveById") public TrainingVO
 	 * retrieve(@RequestHeader(defaultValue = "en_us") String locale, @RequestHeader
 	 * String authorization,
 	 * 
-	 * @RequestBody CourseVO courseVO) { TokenVO tokenVO =
+	 * @RequestBody TrainingVO trainingVO) { TokenVO tokenVO =
 	 * requestService.validateToken(authorization, locale); return
-	 * courseService.retrieveById(courseVO, locale); }
+	 * trainingService.retrieveById(trainingVO, locale); }
 	 * 
 	 * @CrossOrigin
 	 * 
 	 * @GetMapping(value =
-	 * "/firewall/course/v1/retrieveModulesWithVideosByCourseId") public
+	 * "/firewall/training/v1/retrieveModulesWithVideosByTrainingId") public
 	 * List<ModuleVO>
-	 * retrieveModulesWithVideosByCourseId(@RequestHeader(defaultValue = "en_us")
+	 * retrieveModulesWithVideosByTrainingId(@RequestHeader(defaultValue = "en_us")
 	 * String locale,
 	 * 
-	 * @RequestHeader String authorization, @RequestBody CourseVO courseVO) {
+	 * @RequestHeader String authorization, @RequestBody TrainingVO trainingVO) {
 	 * TokenVO tokenVO = requestService.validateToken(authorization, locale); return
-	 * courseService.retrieveModulesWithVideosByCourseId(courseVO, locale); }
+	 * trainingService.retrieveModulesWithVideosByTrainingId(trainingVO, locale); }
 	 */
 
 }

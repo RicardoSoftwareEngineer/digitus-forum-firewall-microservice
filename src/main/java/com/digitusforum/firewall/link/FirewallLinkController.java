@@ -64,34 +64,34 @@ public class FirewallLinkController {
 	/*
 	 * @CrossOrigin
 	 * 
-	 * @GetMapping(value = "/firewall/course/v1/retrieveAll") public List<CourseVO>
+	 * @GetMapping(value = "/firewall/training/v1/retrieveAll") public List<TrainingVO>
 	 * retrieve(@RequestHeader(defaultValue = "en_us") String locale,
 	 * 
 	 * @RequestHeader String authorization) { TokenVO tokenVO =
 	 * requestService.validateToken(authorization, locale); return
-	 * courseService.retrieveAll(locale); }
+	 * trainingService.retrieveAll(locale); }
 	 * 
 	 * @CrossOrigin
 	 * 
-	 * @GetMapping(value = "/firewall/course/v1/retrieveById") public CourseVO
+	 * @GetMapping(value = "/firewall/training/v1/retrieveById") public TrainingVO
 	 * retrieve(@RequestHeader(defaultValue = "en_us") String locale, @RequestHeader
 	 * String authorization,
 	 * 
-	 * @RequestBody CourseVO courseVO) { TokenVO tokenVO =
+	 * @RequestBody TrainingVO trainingVO) { TokenVO tokenVO =
 	 * requestService.validateToken(authorization, locale); return
-	 * courseService.retrieveById(courseVO, locale); }
+	 * trainingService.retrieveById(trainingVO, locale); }
 	 * 
 	 * @CrossOrigin
 	 * 
 	 * @GetMapping(value =
-	 * "/firewall/course/v1/retrieveModulesWithVideosByCourseId") public
+	 * "/firewall/training/v1/retrieveModulesWithVideosByTrainingId") public
 	 * List<ModuleVO>
-	 * retrieveModulesWithVideosByCourseId(@RequestHeader(defaultValue = "en_us")
+	 * retrieveModulesWithVideosByTrainingId(@RequestHeader(defaultValue = "en_us")
 	 * String locale,
 	 * 
-	 * @RequestHeader String authorization, @RequestBody CourseVO courseVO) {
+	 * @RequestHeader String authorization, @RequestBody TrainingVO trainingVO) {
 	 * TokenVO tokenVO = requestService.validateToken(authorization, locale); return
-	 * courseService.retrieveModulesWithVideosByCourseId(courseVO, locale); }
+	 * trainingService.retrieveModulesWithVideosByTrainingId(trainingVO, locale); }
 	 */
 
 }

@@ -37,21 +37,21 @@ public class FirewallSubjectController {
 	}
 
 	@CrossOrigin
-	@PostMapping(value = "/firewall/subject/v1/retrieveByCourseId")
+	@PostMapping(value = "/firewall/subject/v1/retrieveByTrainingId")
 	public List<SubjectVO> retrieveById(@RequestHeader(defaultValue = "en_us") String locale,
 			@RequestHeader String authorization, @RequestBody SubjectVO subjectVO) {
 		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
 		subjectVO.setUserId(tokenVO.getUserId());
-		String cacheKey = "retrieveByCourseId_courseId_" + subjectVO.getCourseId() + "_user_" + tokenVO.getUserId();
+		String cacheKey = "retrieveByTrainingId_trainingId_" + subjectVO.getTrainingId() + "_user_" + tokenVO.getUserId();
 		if(!cache.containsKey(cacheKey)){
-			cache.put(cacheKey, subjectRequestService.retrieveByCourseId(subjectVO, locale));
+			cache.put(cacheKey, subjectRequestService.retrieveByTrainingId(subjectVO, locale));
 		}
 		return cache.get(cacheKey);
 	}
 
 	@CrossOrigin
 	@PostMapping(value = "/firewall/subject/v1/retrieveByIdWithVideos")
-	public SubjectVO retrieveByCourseId(@RequestHeader(defaultValue = "en_us") String locale,
+	public SubjectVO retrieveByTrainingId(@RequestHeader(defaultValue = "en_us") String locale,
 			@RequestHeader String authorization, @RequestBody SubjectVO subjectVO) {
 		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
 		subjectVO.setUserId(tokenVO.getUserId());
@@ -98,4 +98,4 @@ public class FirewallSubjectController {
 
 }
 
-// TODO transferir o http://localhost:8080/firewall/course/v1/retrieveSubjectsByCourseId pra ca
+// TODO transferir o http://localhost:8080/firewall/training/v1/retrieveSubjectsByTrainingId pra ca

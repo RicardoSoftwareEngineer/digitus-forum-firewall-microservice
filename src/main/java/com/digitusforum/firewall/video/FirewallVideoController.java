@@ -47,7 +47,7 @@ public class FirewallVideoController {
 
 	@CrossOrigin
 	@PostMapping(value = "/firewall/video/v1/retrieveBySubjectId")
-	public List<VideoVO> retrieveByCourseId(@RequestHeader(defaultValue = "en_us") String locale,
+	public List<VideoVO> retrieveByTrainingId(@RequestHeader(defaultValue = "en_us") String locale,
 			@RequestHeader String authorization, @RequestBody VideoVO videoVO) {
 		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
 		return videoRequestService.retrieveBySubjectId(videoVO, locale);

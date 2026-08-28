@@ -1,4 +1,4 @@
-package com.digitusforum.firewall.course;
+package com.digitusforum.firewall.training;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,8 +8,8 @@ import java.util.Map;
 import com.digitusforum.firewall.module.ModuleVO;
 import com.digitusforum.firewall.subject.SubjectVO;
 
-public class FirewallCourseVO {
-	private String courseId;
+public class FirewallTrainingVO {
+	private String trainingId;
 	private String userId;
 	private String perfilId;
 	private String name;
@@ -35,12 +35,12 @@ public class FirewallCourseVO {
 		this.modules = modules;
 	}
 
-	public String getCourseId() {
-		return courseId;
+	public String getTrainingId() {
+		return trainingId;
 	}
 
-	public void setCourseId(String courseId) {
-		this.courseId = courseId;
+	public void setTrainingId(String trainingId) {
+		this.trainingId = trainingId;
 	}
 
 	public String getUserId() {

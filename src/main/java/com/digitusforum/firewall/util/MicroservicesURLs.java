@@ -24,11 +24,11 @@ public class MicroservicesURLs {
 	public static String PERFIL = EnvironmentService.PERFIL_SERVER_URL + EnvironmentService.PERFIL_SERVER_PORT + "/perfil" + EnvironmentService.PERFIL_SERVER_VERSION;
 	public static String PERFIL_RETRIEVE_LAST_USED = PERFIL + "/retrieve/lastUsed"; 
 	
-	public static String COURSE = EnvironmentService.COURSE_SERVER_URL + EnvironmentService.COURSE_SERVER_PORT + "/course" + EnvironmentService.COURSE_SERVER_VERSION;
-	public static String COURSE_RETRIEVE_ALL = COURSE + "/retrieveAll"; 
-	public static String COURSE_CREATE = COURSE + "/create"; 
-	public static String COURSE_DELETE = COURSE + "/delete"; 
-	public static String COURSE_RETRIEVE_BY_ID = COURSE + "/retrieveById"; 
-	public static String COURSE_RETRIEVE_SUBJECTS_BY_COURSE_ID = COURSE + "/retrieveSubjectsByCourseId"; 
-	public static String COURSE_RETRIEVE_MODULES_WITH_VIDEOS_BY_COURSE_ID = COURSE + "/retrieveModulesWithVideosByCourseId"; 
+	public static String TRAINING = EnvironmentService.TRAINING_SERVER_URL + EnvironmentService.TRAINING_SERVER_PORT + "/training" + EnvironmentService.TRAINING_SERVER_VERSION;
+	public static String TRAINING_RETRIEVE_ALL = TRAINING + "/retrieveAll"; 
+	public static String TRAINING_CREATE = TRAINING + "/create"; 
+	public static String TRAINING_DELETE = TRAINING + "/delete"; 
+	public static String TRAINING_RETRIEVE_BY_ID = TRAINING + "/retrieveById"; 
+	public static String TRAINING_RETRIEVE_SUBJECTS_BY_TRAINING_ID = TRAINING + "/retrieveSubjectsByTrainingId"; 
+	public static String TRAINING_RETRIEVE_MODULES_WITH_VIDEOS_BY_TRAINING_ID = TRAINING + "/retrieveModulesWithVideosByTrainingId"; 
 }
