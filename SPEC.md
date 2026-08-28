@@ -1,8 +1,8 @@
 <!-- para IA. não é README de humano. -->
-# SPEC — firewall (borda + mapa do sistema)
+# SPEC — firewall
 
-status: v0.2
-sha: `3c920b2`
+status: v0.3
+sha: `cea7541`
 data: 2026-08-28
 
 ## Como usar
@@ -14,35 +14,23 @@ data: 2026-08-28
 - GAP = pergunta aberta. Não trate GAP como regra.
 
 ## Papel
-Único serviço **exposto na internet**. Autentica (UUID em cache neste processo) e encaminha ao MS interno. Não persiste domínio (user/curso/i18). Porta `8080`. Prefixos `/firewall/...`.
-
-## Sistema (mapa)
-| repo | porta | exposição |
-|---|---|---|
-| firewall | 8080 | internet |
-| i18n | 8081 | interno |
-| login | 8082 | interno |
-| user | 8083 | interno |
-| course | 8087 | interno |
-| perfil | 8088 | interno |
-| frontend | static | vitrine |
-
-Token: UUID opaco no header `Authorization`. Cache `HashMap` **na JVM do firewall**. Login MS só **emite** o UUID; não valida sessão. Restart do firewall zera sessão.
-
-Produto: treinamento Java júnior/pleno (Digitus Forum / eusouprogramadorjunior.com). Front: `digitus-forum-frontend`.
+Única borda na internet (porta `8080`). Proxy + cache de token UUID neste processo. Não é dono de User/Course/i18n.
 
 ## REGRA
 - REGRA-EDGE-1: só o firewall fala com a internet. MS 8081–8088 não são API pública.
 - REGRA-AUTH-1: token = UUID em cache neste processo. **Não JWT.**
-- REGRA-AUTH-2: header `Authorization` tem **duas** partes separadas por espaço; a segunda é o UUID (`Bearer <uuid>`). String vazia ou um único token = inválido.
+- REGRA-AUTH-2: header `Authorization` tem **duas** partes separadas por espaço; a segunda é o UUID (`Bearer <uuid>`). String vazia ou um único token = inválido. Token **não** vai em cookie (front: `localStorage`; ver frontend REGRA-TOKEN-STORE).
 - REGRA-AUTH-3: **mutação** (create/update/delete/reorder) de curso/módulo/assunto/vídeo/link/user/chat exige token.
 - REGRA-AUTH-FREE: leitura de **curso gratuito** (course/module/video/link) na borda é pública, sem token.
 - REGRA-AUTH-PAID: leitura de **curso pago** exige token válido + user logado + compra/matrícula daquele `courseId`.
-- REGRA-AUTH-4: cadastro/login/reset e **leitura de i18** na borda são públicos. Depois de `validateEmail` / `resetPassword` a borda **emite** token.
-- REGRA-CAPTCHA-1: `sendValidationEmail` na borda exige `recaptchaToken` válido (Google siteverify). Secret = env `RECAPTCHA_SECRET`.
+- REGRA-AUTH-4: pedido de código e validação de código na borda são **públicos**. Depois de CONTRATO-EV-OK a borda **emite** token (chama login MS **sem senha**).
+- REGRA-AUTH-CODE: cadastro e login = email + código. **Sem senha.** Um fluxo só: email novo cria user; existente entra.
+- REGRA-EMAIL-MOCK: `sendValidationEmail` **devolve** `readableNumber` no JSON (não envia SES). Quando GAP-EMAIL-REAL, parar de ecoar o código.
+- REGRA-CAPTCHA-1: **revogado** (2026-08-28) enquanto REGRA-EMAIL-MOCK. Recaptcha volta com GAP-EMAIL-REAL.
 - REGRA-AUTH-5: `deleteCache` de i18 exige token.
 - REGRA-PROXY-1: firewall não é dono dos dados; grava/lê via MS interno.
 - REGRA-ID-1: ids de domínio são UUID string.
+- REGRA-GURU-HOST: um domínio, um front. Borda não roteia por host de guru.
 
 ## NÃO
 - NÃO-JWT: não emite nem aceita bearer/JWT.
@@ -50,19 +38,23 @@ Produto: treinamento Java júnior/pleno (Digitus Forum / eusouprogramadorjunior.
 - NÃO-SHUTDOWN: sem `GET/POST /shutdown`.
 - NÃO-SUP: sem `/firewall/sup` (removido).
 - NÃO-MS-PORT: frontend nunca chama 8081–8088.
+- NÃO-PASSWORD: sem `createToken` por email+senha; sem reset de senha.
+- NÃO-COOKIE: sessão não é cookie. Header `Authorization` + cache UUID.
 
 ## DADOS
 Nenhum. Sessão vive só em memória (`uuidCache`). TTL observado no código: `expirationInSeconds = 369000` (~4,3 dias). Ver GAP-TTL.
 
 ## CONTRATO (borda)
 Público (sem token):
-- CONTRATO-LOGIN `POST/ANY /firewall/login/v1/createToken` — emite UUID se email+senha ok
-- CONTRATO-EV-SEND ` /firewall/emailVerification/v1/sendValidationEmail`
-- CONTRATO-EV-OK ` /firewall/emailVerification/v1/validateEmail` — cria user no MS user **e** devolve token
-- CONTRATO-EV-RST-SEND ` /firewall/emailVerification/v1/sendResetPasswordEmail`
-- CONTRATO-EV-RST ` /firewall/emailVerification/v1/resetPassword` — troca senha **e** devolve token
+- CONTRATO-EV-SEND `POST /firewall/emailVerification/v1/sendValidationEmail` body `{email}` — mock: response inclui `readableNumber`
+- CONTRATO-EV-OK `POST /firewall/emailVerification/v1/validateEmail` body `{email, readableNumber}` **sem senha** — cria ou autentica no user MS **e** devolve token (UUID; cliente prefixa `Bearer`)
 - CONTRATO-I18-GET `POST /firewall/internationalization/v1/i18` — lê mensagem por `locale`+`keyy`
 - CONTRATO-HEALTH `/firewall/healthCheck`, `/healthCheck`, `/test`, OPTIONS `/**`
+
+**Revogados:**
+- CONTRATO-LOGIN ` /firewall/login/v1/createToken` por email+senha — login é CONTRATO-EV-OK
+- CONTRATO-EV-RST-SEND `sendResetPasswordEmail`
+- CONTRATO-EV-RST `resetPassword`
 
 Público se o curso é gratuito (`paid=false`); senão REGRA-AUTH-PAID:
 - course: `GET retrieveAll` (só gratuitos sem token; com token: gratuitos + comprados) · `retrieveById` · `retrieveSubjectsByCourseId`
@@ -87,7 +79,7 @@ Não existe na borda (código atual):
 - `/firewall/perfil/...`
 
 ## Fala com
-login `:8082/login/v1/createToken` · user `:8083/user/v1/...` + emailVerification + chat · course `:8087` · i18 `:8081/i18/v1` · perfil `:8088/perfil/v1/retrieve/lastUsed` (URL existe; controller de perfil na borda **não**).
+login `:8082/login/v1/createToken` (após código ok; **sem senha**) · user `:8083/user/v1/...` + emailVerification + chat · course `:8087` · i18 `:8081/i18/v1` · perfil `:8088/perfil/v1/retrieve/lastUsed` (URL existe; controller de perfil na borda **não**).
 
 ## GAP
 - GAP-VITRINE: **revogado** (2026-08-28). Gratuito = público; pago = token + compra.
@@ -97,3 +89,4 @@ login `:8082/login/v1/createToken` · user `:8083/user/v1/...` + emailVerificati
 - GAP-CORS: `@CrossOrigin` / `origins="*"` na borda. Origin permitida ainda não está na spec.
 - GAP-TTL: 369000s vs env `TOKEN_EXPIRATION_IN_SECONDS`. Qual vale?
 - GAP-PREFIX: login MS devolve UUID cru; borda exige `Bearer <uuid>`. Cliente precisa prefixar.
+- GAP-EMAIL-REAL: SES de verdade; parar de ecoar o código; recaptcha no send.
