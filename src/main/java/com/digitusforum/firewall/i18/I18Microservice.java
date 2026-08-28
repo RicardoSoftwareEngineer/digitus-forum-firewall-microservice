@@ -1,5 +1,6 @@
 package com.digitusforum.firewall.i18;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +35,18 @@ public class I18Microservice {
 
 	public void deleteCache() {
 		messagesCache = new HashMap<>();
+	}
+
+	public Object listFrontend(I18VO i18) {
+		if (i18 == null) {
+			i18 = new I18VO();
+		}
+		if (!requestService.isUp(MicroservicesURLs.I18)) {
+			return Collections.emptyList();
+		}
+		ResponseEntity<?> response = (ResponseEntity<?>) requestService.hitIt(
+				MicroservicesURLs.I18 + "/frontend", i18, i18.getLocale(), Object.class);
+		return response.getBody();
 	}
 
 	private I18VO makeRequest(I18VO i18) {
