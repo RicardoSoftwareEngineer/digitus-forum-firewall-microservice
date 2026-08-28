@@ -34,9 +34,10 @@ Produto: treinamento Java júnior/pleno (Digitus Forum / eusouprogramadorjunior.
 ## INV
 - INV-EDGE-1: só o firewall fala com a internet. MS 8081–8088 não são API pública.
 - INV-AUTH-1: token = UUID em cache neste processo. **Não JWT.**
-- INV-AUTH-2: header `Authorization` = o UUID. Vazio/ausente = não autenticado.
+- INV-AUTH-2: header `Authorization` tem **duas** partes separadas por espaço; a segunda é o UUID (`Bearer <uuid>`). String vazia ou um único token = inválido.
 - INV-AUTH-3: mutação e leitura de curso/módulo/assunto/vídeo/link/user/chat exigem token válido.
 - INV-AUTH-4: cadastro/login/reset e **leitura de i18** na borda são públicos (sem token). Depois de `validateEmail` / `resetPassword` a borda **emite** token.
+- INV-CAPTCHA-1: `sendValidationEmail` na borda exige `recaptchaToken` válido (Google siteverify). Secret = env `RECAPTCHA_SECRET`.
 - INV-AUTH-5: `deleteCache` de i18 exige token.
 - INV-PROXY-1: firewall não é dono dos dados; grava/lê via MS interno.
 - INV-ID-1: ids de domínio são UUID string.
@@ -62,7 +63,7 @@ Público (sem token):
 - END-HEALTH `/firewall/healthCheck`, `/healthCheck`, `/test`, OPTIONS `/**`
 
 Exige token (`validateToken`):
-- user: `POST /firewall/user/v1/create` · `GET /firewall/user/v1/{id}/retrieve` · `{id}/update` · `{id}/delete`
+- user: `POST /firewall/user/v1/create` (**exige token; não é o signup público** — signup é END-EV-OK) · `GET /firewall/user/v1/{id}/retrieve` · `{id}/update` · `{id}/delete`
 - chat: `/firewall/user/v1/chat` · `conversations` · `conversation`
 - course: `create` · `GET retrieveAll` · `retrieveById` · `retrieveSubjectsByCourseId` · `delete`
 - module: `create` `retrieveById` `retrieveByCourseId` `retrieveByCourseIdWithVideos` `update` `delete` `reorder` `addVideo` `removeVideo`
@@ -85,4 +86,4 @@ login `:8082/login/v1/createToken` · user `:8083/user/v1/...` + emailVerificati
 - GAP-IDOR-USER: retrieve/update/delete usam `{id}` da URL, não o userId do token. Admin-only? ou só o próprio id?
 - GAP-CORS: `@CrossOrigin` / `origins="*"` na borda. Origin permitida ainda não está na spec.
 - GAP-TTL: 369000s vs env `TOKEN_EXPIRATION_IN_SECONDS`. Qual vale?
-- GAP-CAPTCHA: recaptcha na borda em alguns fluxos; regra de quando é obrigatório não está fechada.
+- GAP-PREFIX: login MS devolve UUID cru; borda exige `Bearer <uuid>`. Cliente precisa prefixar.
