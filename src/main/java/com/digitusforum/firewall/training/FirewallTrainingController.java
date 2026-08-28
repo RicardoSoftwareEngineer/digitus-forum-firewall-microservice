@@ -43,6 +43,12 @@ public class FirewallTrainingController {
 	}
 
 	@CrossOrigin
+	@PostMapping(value = "/firewall/training/v1/retrieveAll")
+	public List<FirewallTrainingVO> retrieveAll(@RequestHeader(defaultValue = "en_us") String locale) {
+		return trainingService.retrieveAll(locale);
+	}
+
+	@CrossOrigin
 	@PostMapping(value = "/firewall/training/v1/retrieveById")
 	public FirewallTrainingVO retrieve(@RequestHeader(defaultValue = "en_us") String locale, @RequestHeader String authorization,
 			@RequestBody FirewallTrainingVO trainingVO) {
