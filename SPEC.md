@@ -31,7 +31,7 @@ data: 2026-08-28
 - REGRA-PROXY-1: firewall não é dono dos dados; grava/lê via MS interno.
 - REGRA-ID-1: ids de domínio são UUID string.
 - REGRA-GURU-HOST: um domínio, um front. Borda não roteia por host de guru.
-- REGRA-MVP1-PAY: Stripe Checkout. Mensalidade `card`. Avulso `card`+`pix`. Ver SPEC-MVP1.md (frontend).
+- REGRA-MVP1-PAY: Stripe Embedded Checkout. Mensalidade `card`. Avulso `card`+`pix`. Response `clientSecret`. Ver SPEC-MVP1.md (frontend).
 - REGRA-MVP1-WEBHOOK: webhook Stripe na borda; verificar assinatura; só então user MS grava entitlement.
 
 ## NÃO
@@ -70,8 +70,8 @@ Público se o treinamento é gratuito (`paid=false`); senão REGRA-AUTH-PAID:
 - link: `retrieveByVideoId`
 
 Exige token (além do que já está):
-- CONTRATO-STRIPE-SUB `POST /firewall/billing/v1/checkout/subscription` — Checkout Session mensalidade java, `card`
-- CONTRATO-STRIPE-BUY `POST /firewall/billing/v1/checkout/training` `{trainingId}` — Session avulsa `card`+`pix`
+- CONTRATO-STRIPE-SUB `POST /firewall/billing/v1/checkout/subscription` — Session embedded mensalidade java, `card`, devolve `clientSecret`
+- CONTRATO-STRIPE-BUY `POST /firewall/billing/v1/checkout/training` `{trainingId}` — Session embedded avulsa `card`+`pix`, devolve `clientSecret`
 - CONTRATO-ME `GET /firewall/billing/v1/me` — assinatura + lista de trainingId comprados
 - CONTRATO-GURU-PAGES leitura das páginas do guru (público no MVP1)
 
