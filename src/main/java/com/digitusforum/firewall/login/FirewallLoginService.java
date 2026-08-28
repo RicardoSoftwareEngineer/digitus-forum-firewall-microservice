@@ -33,6 +33,22 @@ public class FirewallLoginService {
 		tokenVO.setPassword(firewallEmailVerificationVO.getPassword());
 		return createToken(tokenVO, locale);
 	}
+
+	/** REGRA-AUTH-4 / NÃO-PASSWORD: UUID no cache da borda após EV-OK. Sem senha. Sem login MS. */
+	public TokenVO issueUuidAfterEmailCode(String email, String userId, String locale) {
+		if (StringUtils.isBlank(email))
+			throw ThrowService.doIt(locale, 503, M.LOGIN_MISSING_EMAIL);
+
+		TokenVO tokenVO = new TokenVO();
+		tokenVO.setEmail(email);
+		tokenVO.setUserId(userId);
+		tokenVO.setToken(java.util.UUID.randomUUID().toString());
+		tokenVO.setTokenType("uuid");
+		tokenVO.setCreatedIn(ZonedDateTime.now());
+		tokenVO.setPassword(null);
+		uuidCache.put(tokenVO.getToken(), tokenVO);
+		return tokenVO;
+	}
 	
 	public TokenVO createToken(TokenVO tokenVO, String locale) throws JsonMappingException, JsonProcessingException {
 		if (StringUtils.isBlank(tokenVO.getEmail()))

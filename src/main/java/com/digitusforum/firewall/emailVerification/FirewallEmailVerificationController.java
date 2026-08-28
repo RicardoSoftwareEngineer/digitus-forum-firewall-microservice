@@ -32,8 +32,8 @@ public class FirewallEmailVerificationController {
 	@RequestMapping(value = "/firewall/emailVerification/v1/validateEmail")
 	public TokenVO validateEmail(@RequestHeader(defaultValue = "en_us") String locale,
 			@RequestBody FirewallEmailVerificationVO firewallEmailVerificationVO) throws JsonMappingException, JsonProcessingException {
-		firewallVerificationService.validateEmail(firewallEmailVerificationVO, locale);
-		return firewallLoginService.createToken(firewallEmailVerificationVO, locale);
+		FirewallEmailVerificationVO validated = firewallVerificationService.validateEmail(firewallEmailVerificationVO, locale);
+		return firewallLoginService.issueUuidAfterEmailCode(validated.getEmail(), validated.getUserId(), locale);
 	}
 	
 	@CrossOrigin
