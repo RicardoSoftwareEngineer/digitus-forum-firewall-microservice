@@ -1,7 +1,7 @@
 <!-- para IA. não é README de humano. -->
 # SPEC — firewall
 
-status: v0.5
+status: v0.6
 sha: `5b8cf60`
 data: 2026-08-28
 
@@ -21,7 +21,7 @@ data: 2026-08-28
 - REGRA-AUTH-1: token = UUID em cache neste processo. **Não JWT.**
 - REGRA-AUTH-2: header `Authorization` tem **duas** partes separadas por espaço; a segunda é o UUID (`Bearer <uuid>`). String vazia ou um único token = inválido. Token **não** vai em cookie (front: `localStorage`; ver frontend REGRA-TOKEN-STORE).
 - REGRA-AUTH-3: **mutação** (create/update/delete/reorder) de treinamento/módulo/assunto/vídeo/link/user/chat exige token.
-- REGRA-AUTH-FREE: leitura de **treinamento gratuito** (training/module/video/link) na borda é pública, sem token.
+- REGRA-AUTH-FREE: leitura de **treinamento gratuito** (training/module/video/link) na borda é pública, sem token. Gratuito = paid=false AND price=0 (DADOS-TRAINING no course MS).
 - REGRA-AUTH-PAID: leitura de **treinamento pago** exige token válido + user logado + (DADOS-COMPRA daquele `trainingId` **ou** DADOS-ASSINATURA active do guru do training). MVP1: assinatura = guru java.
 - REGRA-AUTH-4: pedido de código e validação de código na borda são **públicos**. Depois de CONTRATO-EV-OK a borda **emite** token (chama login MS **sem senha**).
 - REGRA-AUTH-CODE: cadastro e login = email + código. **Sem senha.** Um fluxo só: email novo cria user; existente entra.
@@ -66,7 +66,7 @@ Público (sem token):
 
 Público se o treinamento é gratuito (`paid=false`); senão REGRA-AUTH-PAID:
 - **Revogado** (2026-08-28): prefixo `/firewall/course/v1` e `retrieve*ByCourseId*`. Equivalente training abaixo.
-- training: `GET retrieveAll` (só gratuitos sem token; com token: gratuitos + comprados) · `retrieveById` · `retrieveSubjectsByTrainingId`
+- training: `GET retrieveAll` (só gratuitos sem token; com token: gratuitos + comprados). JSON de cada training inclui `guruId`, `paid`, `price` (centavos BRL) — DADOS-TRAINING no course MS. · `retrieveById` · `retrieveSubjectsByTrainingId`
 - module: `retrieveById` `retrieveByTrainingId` `retrieveByTrainingIdWithVideos`
 - video: `retrieveById` `retrieveBySubjectId`
 - link: `retrieveByVideoId`
