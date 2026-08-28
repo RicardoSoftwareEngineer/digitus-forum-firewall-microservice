@@ -33,13 +33,22 @@ public class RequestServiceDEPRECATED {
 		return hitIt(endpoint, Timeouts.ideal, requestEntityBody, Headers.DEFAULT(locale));
 	}
 
+	public Object hitIt(String endpoint, Object requestEntityBody, String locale, Class<?> responseType) {
+		return hitIt(endpoint, Timeouts.ideal, requestEntityBody, Headers.DEFAULT(locale), responseType);
+	}
+
 	public Object hitIt(String endpoint, int timeout, Object requestEntityBody, MultiValueMap<String, String> headers) {
+		return hitIt(endpoint, timeout, requestEntityBody, headers, requestEntityBody.getClass());
+	}
+
+	public Object hitIt(String endpoint, int timeout, Object requestEntityBody, MultiValueMap<String, String> headers,
+			Class<?> responseType) {
 		String requestTimeId = TimeService.startCounting();
 		RestTemplate restTemplate = new RestTemplate();
 		((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory()).setConnectTimeout(timeout);
 		((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory()).setReadTimeout(timeout);
 		final HttpEntity<Object> entity = new HttpEntity<>(requestEntityBody, headers);
-		Object response = restTemplate.exchange(endpoint, HttpMethod.POST, entity, requestEntityBody.getClass());
+		Object response = restTemplate.exchange(endpoint, HttpMethod.POST, entity, responseType);
 		TimeService.persistElapsedTime(requestTimeId, endpoint);
 		return response;
 	}

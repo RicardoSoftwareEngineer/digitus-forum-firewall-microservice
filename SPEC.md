@@ -1,7 +1,7 @@
 <!-- para IA. não é README de humano. -->
 # SPEC — firewall
 
-status: v0.5
+status: v0.6
 sha: `5b8cf60`
 data: 2026-08-28
 
@@ -57,6 +57,7 @@ Público (sem token):
 - CONTRATO-EV-SEND `POST /firewall/emailVerification/v1/sendValidationEmail` body `{email}` — mock: response inclui `readableNumber`. código alinhado (passthrough; sem captcha enquanto mock).
 - CONTRATO-EV-OK `POST /firewall/emailVerification/v1/validateEmail` body `{email, readableNumber}` **sem senha** — cria ou autentica no user MS **e** devolve token (UUID no cache da borda; cliente prefixa `Bearer`). código alinhado (sem senha; sem login MS).
 - CONTRATO-I18-GET `POST /firewall/internationalization/v1/i18` — lê mensagem por `locale`+`keyy`
+- CONTRATO-FRONT-BUNDLE `POST /firewall/internationalization/v1/frontend` `{locale}` — dump de todas as i18 do locale (público, sem token). Proxy RestTemplate → `/i18/v1/frontend`. JSON array `{keyy, message}`.
 - CONTRATO-HEALTH `/firewall/healthCheck`, `/healthCheck`, `/test`, OPTIONS `/**`
 
 **Revogados:**
@@ -89,13 +90,13 @@ Exige token sempre:
 
 Não existe na borda (código atual):
 - `/firewall/training/v1/retrieveByLocale` (antes `/firewall/course/v1/retrieveByLocale`)
-- `/firewall/internationalization/v1/frontend`
 - `/firewall/perfil/...`
 
 ## Fala com
 login `:8082/login/v1/createToken` (após código ok; **sem senha**) · user `:8083/user/v1/...` + emailVerification + chat · training `:8087` (repo `digitus-forum-course-microservice`) · i18 `:8081/i18/v1` · perfil `:8088/perfil/v1/retrieve/lastUsed` (URL existe; controller de perfil na borda **não**).
 
 ## GAP
+- GAP-FRONT-BUNDLE: **revogado** (2026-08-28). CONTRATO-FRONT-BUNDLE.
 - GAP-VITRINE: **revogado** (2026-08-28). Gratuito = público; pago = token + compra.
 - GAP-COMPRA: **revogado** (MVP1). DADOS-COMPRA / DADOS-ASSINATURA no user MS.
 - GAP-COMPRA-OLD: onde persiste “user comprou este trainingId” (matrícula). Sem DADOS, REGRA-AUTH-PAID não fecha no código.

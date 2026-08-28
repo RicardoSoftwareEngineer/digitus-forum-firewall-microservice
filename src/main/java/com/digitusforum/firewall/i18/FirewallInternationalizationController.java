@@ -3,6 +3,7 @@ package com.digitusforum.firewall.i18;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -22,6 +23,19 @@ public class FirewallInternationalizationController {
 	@PostMapping(value = "/firewall/internationalization/v1/i18")
 	public Object internationalization(@RequestBody Optional<I18VO> i18) {
 		return i18Microservice.getMessageByKey(i18.get());
+	}
+
+	@CrossOrigin
+	@PostMapping(value = "/firewall/internationalization/v1/frontend")
+	public Object frontend(@RequestHeader(defaultValue = "en_us") String locale,
+			@RequestBody(required = false) I18VO i18) {
+		if (i18 == null) {
+			i18 = new I18VO();
+		}
+		if (i18.getLocale() == null || i18.getLocale().trim().isEmpty()) {
+			i18.setLocale(locale);
+		}
+		return i18Microservice.listFrontend(i18);
 	}
 
 	@PostMapping(value = "/firewall/internationalization/v1/deleteCache")
