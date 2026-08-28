@@ -58,6 +58,7 @@ Público (sem token):
 - CONTRATO-EV-OK `POST /firewall/emailVerification/v1/validateEmail` body `{email, readableNumber}` **sem senha** — cria ou autentica no user MS **e** devolve token (UUID no cache da borda; cliente prefixa `Bearer`). código alinhado (sem senha; sem login MS).
 - CONTRATO-I18-GET `POST /firewall/internationalization/v1/i18` — lê mensagem por `locale`+`keyy`
 - CONTRATO-FRONT-BUNDLE `POST /firewall/internationalization/v1/frontend` `{locale}` — dump de todas as i18 do locale (público, sem token). Proxy RestTemplate → `/i18/v1/frontend`. JSON array `{keyy, message}`.
+- CONTRATO-GURU-PAGES `POST /firewall/guru/v1/{guruId}/pages` — leitura das páginas do guru (público no MVP1, só leitura). Proxy → course MS `/guruPage/v1/retrieveByGuruId`.
 - CONTRATO-HEALTH `/firewall/healthCheck`, `/healthCheck`, `/test`, OPTIONS `/**`
 
 **Revogados:**
@@ -76,7 +77,6 @@ Exige token (além do que já está):
 - CONTRATO-STRIPE-SUB `POST /firewall/billing/v1/checkout/subscription` — Session embedded mensalidade java, `card`, devolve `clientSecret`
 - CONTRATO-STRIPE-BUY `POST /firewall/billing/v1/checkout/training` `{trainingId}` — Session embedded avulsa `card`+`pix`, devolve `clientSecret`
 - CONTRATO-ME `GET /firewall/billing/v1/me` — assinatura + lista de trainingId comprados
-- CONTRATO-GURU-PAGES leitura das páginas do guru (público no MVP1)
 
 Exige token sempre:
 - user: `POST /firewall/user/v1/create` (não é signup; signup é CONTRATO-EV-OK) · `GET /{id}/retrieve` · `{id}/update` · `{id}/delete`
