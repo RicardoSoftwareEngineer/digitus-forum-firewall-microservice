@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.digitusforum.firewall.billing.PaidAccessService;
 import com.digitusforum.firewall.login.FirewallLoginService;
 import com.digitusforum.firewall.login.TokenVO;
 
@@ -20,6 +21,8 @@ public class FirewallVideoController {
 	VideoRequestService videoRequestService;
 	@Autowired
 	FirewallLoginService firewallLoginService;
+	@Autowired
+	PaidAccessService paidAccessService;
 
 	
 	//TODO continuar criando esses caras no postman
@@ -35,10 +38,14 @@ public class FirewallVideoController {
 	@CrossOrigin
 	@PostMapping(value = "/firewall/video/v1/retrieveById")
 	public VideoVO retrieveById(@RequestHeader(defaultValue = "en_us") String locale,
-			@RequestHeader String authorization, @RequestBody VideoVO videoVO) {
-		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
-		videoVO.setUserId(tokenVO.getUserId());
-		String cacheKey = "retrieveById_videoId_" + videoVO.getVideoId() + "_user_" + tokenVO.getUserId();
+			@RequestHeader(required = false) String authorization, @RequestBody VideoVO videoVO) {
+		TokenVO tokenVO = paidAccessService.requireReadableVideo(videoVO, authorization, locale);
+		String userPart = "public";
+		if (tokenVO != null) {
+			videoVO.setUserId(tokenVO.getUserId());
+			userPart = tokenVO.getUserId();
+		}
+		String cacheKey = "retrieveById_videoId_" + videoVO.getVideoId() + "_user_" + userPart;
 		if(!cache.containsKey(cacheKey)){
 			cache.put(cacheKey, videoRequestService.retrieveById(videoVO, locale));
 		}

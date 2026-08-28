@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.digitusforum.firewall.billing.PaidAccessService;
 import com.digitusforum.firewall.login.FirewallLoginService;
 import com.digitusforum.firewall.login.TokenVO;
 
@@ -20,6 +21,8 @@ public class FirewallModuleController {
 	ModuleRequestService moduleRequestService;
 	@Autowired
 	FirewallLoginService firewallLoginService;
+	@Autowired
+	PaidAccessService paidAccessService;
 
 	Map<String, List<ModuleVO>> cache = new HashMap<String, List<ModuleVO>>();
 
@@ -53,10 +56,14 @@ public class FirewallModuleController {
 	@CrossOrigin
 	@PostMapping(value = "/firewall/module/v1/retrieveByTrainingIdWithVideos")
 	public List<ModuleVO> retrieveModulesWithVideosByTrainingId(@RequestHeader(defaultValue = "en_us") String locale,
-			@RequestHeader String authorization, @RequestBody ModuleVO moduleVO) {
-		TokenVO tokenVO = firewallLoginService.validateToken(authorization, locale);
-		moduleVO.setUserId(tokenVO.getUserId());
-		String cacheKey = "retrieveByTrainingIdWithVideos_trainingId_" + moduleVO.getTrainingId() + "_user_" + tokenVO.getUserId();
+			@RequestHeader(required = false) String authorization, @RequestBody ModuleVO moduleVO) {
+		TokenVO tokenVO = paidAccessService.requireReadableTraining(moduleVO.getTrainingId(), authorization, locale);
+		String userPart = "public";
+		if (tokenVO != null) {
+			moduleVO.setUserId(tokenVO.getUserId());
+			userPart = tokenVO.getUserId();
+		}
+		String cacheKey = "retrieveByTrainingIdWithVideos_trainingId_" + moduleVO.getTrainingId() + "_user_" + userPart;
 		if(!cache.containsKey(cacheKey)){
 			cache.put(cacheKey, moduleRequestService.retrieveByTrainingIdWithVideos(moduleVO, locale));
 		}
