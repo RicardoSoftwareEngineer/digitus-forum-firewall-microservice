@@ -1,4 +1,4 @@
-package com.digitusforum.firewall.course;
+package com.digitusforum.firewall.training;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +14,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.digitusforum.firewall.course.FirewallCourseVO;
+import com.digitusforum.firewall.training.FirewallTrainingVO;
 import com.digitusforum.firewall.i18.I18VO;
 import com.digitusforum.firewall.login.TokenVO;
 import com.digitusforum.firewall.util.ErrorMessageVO;
@@ -26,19 +26,19 @@ import com.digitusforum.firewall.util.TimeService;
 import com.digitusforum.firewall.util.Timeouts;
 import com.google.gson.Gson;
 
-public class FirewallCourseRequestService {
+public class FirewallTrainingRequestService {
 	private Map<String, String> i18MessagesCache = new HashMap<>();
 
-	private void checkCourseMS(String locale) {
-		if (!isUp(MicroservicesURLs.COURSE))
-			throw ThrowService.doIt(locale, 503, M.COURSE_MICROSERVICE_OFFLINE);
+	private void checkTrainingMS(String locale) {
+		if (!isUp(MicroservicesURLs.TRAINING))
+			throw ThrowService.doIt(locale, 503, M.TRAINING_MICROSERVICE_OFFLINE);
 	}
 
-	public List<FirewallCourseVO> retrieveAll(String locale) {
-		checkCourseMS(locale);
-		String jsonResponse = request(MicroservicesURLs.COURSE_RETRIEVE_ALL, locale);
-		List<FirewallCourseVO> courses = new Gson().fromJson(jsonResponse, List.class);
-		return courses;
+	public List<FirewallTrainingVO> retrieveAll(String locale) {
+		checkTrainingMS(locale);
+		String jsonResponse = request(MicroservicesURLs.TRAINING_RETRIEVE_ALL, locale);
+		List<FirewallTrainingVO> trainings = new Gson().fromJson(jsonResponse, List.class);
+		return trainings;
 	}
 
 	

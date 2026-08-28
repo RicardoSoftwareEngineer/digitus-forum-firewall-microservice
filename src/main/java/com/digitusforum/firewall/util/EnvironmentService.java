@@ -19,9 +19,9 @@ public class EnvironmentService {
 	public static String PERFIL_SERVER_URL = getEnvVar("PERFIL_SERVER_URL");
 	public static String PERFIL_SERVER_VERSION = getEnvVar("PERFIL_SERVER_VERSION");
 	
-	public static String COURSE_SERVER_PORT = getEnvVar("COURSE_SERVER_PORT");
-	public static String COURSE_SERVER_URL = getEnvVar("COURSE_SERVER_URL");
-	public static String COURSE_SERVER_VERSION = getEnvVar("COURSE_SERVER_VERSION");
+	public static String TRAINING_SERVER_PORT = getEnvVar("TRAINING_SERVER_PORT");
+	public static String TRAINING_SERVER_URL = getEnvVar("TRAINING_SERVER_URL");
+	public static String TRAINING_SERVER_VERSION = getEnvVar("TRAINING_SERVER_VERSION");
 	
 	
 	public static String JWT_KEY = getEnvVar("JWT_KEY");
@@ -46,9 +46,9 @@ public class EnvironmentService {
 		case "USER_SERVER_URL": return "http://localhost:";
 		case "USER_SERVER_VERSION": return "/v1";
 		
-		case "COURSE_SERVER_PORT": return "8087";
-		case "COURSE_SERVER_URL": return "http://localhost:";
-		case "COURSE_SERVER_VERSION": return "/v1";
+		case "TRAINING_SERVER_PORT": return "8087";
+		case "TRAINING_SERVER_URL": return "http://localhost:";
+		case "TRAINING_SERVER_VERSION": return "/v1";
 		
 		case "PERFIL_SERVER_PORT": return "8088";
 		case "PERFIL_SERVER_URL": return "http://localhost:";

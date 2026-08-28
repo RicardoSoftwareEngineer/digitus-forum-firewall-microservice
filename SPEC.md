@@ -1,8 +1,8 @@
 <!-- para IA. não é README de humano. -->
 # SPEC — firewall
 
-status: v0.3
-sha: `cea7541`
+status: v0.4
+sha: `5b8cf60`
 data: 2026-08-28
 
 ## Como usar
@@ -14,15 +14,15 @@ data: 2026-08-28
 - GAP = pergunta aberta. Não trate GAP como regra.
 
 ## Papel
-Única borda na internet (porta `8080`). Proxy + cache de token UUID neste processo. Não é dono de User/Course/i18n.
+Única borda na internet (porta `8080`). Proxy + cache de token UUID neste processo. Não é dono de User/Training/i18n.
 
 ## REGRA
 - REGRA-EDGE-1: só o firewall fala com a internet. MS 8081–8088 não são API pública.
 - REGRA-AUTH-1: token = UUID em cache neste processo. **Não JWT.**
 - REGRA-AUTH-2: header `Authorization` tem **duas** partes separadas por espaço; a segunda é o UUID (`Bearer <uuid>`). String vazia ou um único token = inválido. Token **não** vai em cookie (front: `localStorage`; ver frontend REGRA-TOKEN-STORE).
-- REGRA-AUTH-3: **mutação** (create/update/delete/reorder) de curso/módulo/assunto/vídeo/link/user/chat exige token.
-- REGRA-AUTH-FREE: leitura de **curso gratuito** (course/module/video/link) na borda é pública, sem token.
-- REGRA-AUTH-PAID: leitura de **curso pago** exige token válido + user logado + compra/matrícula daquele `courseId`.
+- REGRA-AUTH-3: **mutação** (create/update/delete/reorder) de treinamento/módulo/assunto/vídeo/link/user/chat exige token.
+- REGRA-AUTH-FREE: leitura de **treinamento gratuito** (training/module/video/link) na borda é pública, sem token.
+- REGRA-AUTH-PAID: leitura de **treinamento pago** exige token válido + user logado + compra/matrícula daquele `trainingId`.
 - REGRA-AUTH-4: pedido de código e validação de código na borda são **públicos**. Depois de CONTRATO-EV-OK a borda **emite** token (chama login MS **sem senha**).
 - REGRA-AUTH-CODE: cadastro e login = email + código. **Sem senha.** Um fluxo só: email novo cria user; existente entra.
 - REGRA-EMAIL-MOCK: `sendValidationEmail` **devolve** `readableNumber` no JSON (não envia SES). Quando GAP-EMAIL-REAL, parar de ecoar o código.
@@ -34,7 +34,7 @@ data: 2026-08-28
 
 ## NÃO
 - NÃO-JWT: não emite nem aceita bearer/JWT.
-- NÃO-DB: sem tabela própria de user/curso/token.
+- NÃO-DB: sem tabela própria de user/treinamento/token.
 - NÃO-SHUTDOWN: sem `GET/POST /shutdown`.
 - NÃO-SUP: sem `/firewall/sup` (removido).
 - NÃO-MS-PORT: frontend nunca chama 8081–8088.
@@ -56,34 +56,34 @@ Público (sem token):
 - CONTRATO-EV-RST-SEND `sendResetPasswordEmail`
 - CONTRATO-EV-RST `resetPassword`
 
-Público se o curso é gratuito (`paid=false`); senão REGRA-AUTH-PAID:
-- course: `GET retrieveAll` (só gratuitos sem token; com token: gratuitos + comprados) · `retrieveById` · `retrieveSubjectsByCourseId`
-- module: `retrieveById` `retrieveByCourseId` `retrieveByCourseIdWithVideos`
+Público se o treinamento é gratuito (`paid=false`); senão REGRA-AUTH-PAID:
+- **Revogado** (2026-08-28): prefixo `/firewall/course/v1` e `retrieve*ByCourseId*`. Equivalente training abaixo.
+- training: `GET retrieveAll` (só gratuitos sem token; com token: gratuitos + comprados) · `retrieveById` · `retrieveSubjectsByTrainingId`
+- module: `retrieveById` `retrieveByTrainingId` `retrieveByTrainingIdWithVideos`
 - video: `retrieveById` `retrieveBySubjectId`
 - link: `retrieveByVideoId`
 
 Exige token sempre:
 - user: `POST /firewall/user/v1/create` (não é signup; signup é CONTRATO-EV-OK) · `GET /{id}/retrieve` · `{id}/update` · `{id}/delete`
 - chat: `/firewall/user/v1/chat` · `conversations` · `conversation`
-- course: `create` · `delete`
+- training: `create` · `delete`
 - module: `create` `update` `delete` `reorder` `addVideo` `removeVideo`
-- subject: `create` `update` `addVideo` `removeVideo` (retrieve* segue a regra grátis/pago do curso)
+- subject: `create` `update` `addVideo` `removeVideo` (retrieve* segue a regra grátis/pago do treinamento)
 - video: `create` `update` `delete`
 - link: `create` `update` `delete` `reorder`
 - i18: `POST /firewall/internationalization/v1/deleteCache`
 
 Não existe na borda (código atual):
-- `/firewall/course/v1/retrieveByLocale`
-- `/firewall/module/v1/retrieveByTrainingIdWithVideos`
+- `/firewall/training/v1/retrieveByLocale` (antes `/firewall/course/v1/retrieveByLocale`)
 - `/firewall/internationalization/v1/frontend`
 - `/firewall/perfil/...`
 
 ## Fala com
-login `:8082/login/v1/createToken` (após código ok; **sem senha**) · user `:8083/user/v1/...` + emailVerification + chat · course `:8087` · i18 `:8081/i18/v1` · perfil `:8088/perfil/v1/retrieve/lastUsed` (URL existe; controller de perfil na borda **não**).
+login `:8082/login/v1/createToken` (após código ok; **sem senha**) · user `:8083/user/v1/...` + emailVerification + chat · training `:8087` (repo `digitus-forum-course-microservice`) · i18 `:8081/i18/v1` · perfil `:8088/perfil/v1/retrieve/lastUsed` (URL existe; controller de perfil na borda **não**).
 
 ## GAP
 - GAP-VITRINE: **revogado** (2026-08-28). Gratuito = público; pago = token + compra.
-- GAP-COMPRA: onde persiste “user comprou este courseId” (matrícula). Sem DADOS, REGRA-AUTH-PAID não fecha no código.
+- GAP-COMPRA: onde persiste “user comprou este trainingId” (matrícula). Sem DADOS, REGRA-AUTH-PAID não fecha no código.
 - GAP-AUDIO: aula = gif + arquivo de áudio; coluna/chave do áudio ainda não fechada.
 - GAP-IDOR-USER: retrieve/update/delete usam `{id}` da URL, não o userId do token. Admin-only? ou só o próprio id?
 - GAP-CORS: `@CrossOrigin` / `origins="*"` na borda. Origin permitida ainda não está na spec.

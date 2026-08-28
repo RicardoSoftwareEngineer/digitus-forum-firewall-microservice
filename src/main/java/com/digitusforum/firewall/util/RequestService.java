@@ -16,7 +16,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.digitusforum.firewall.course.FirewallCourseVO;
+import com.digitusforum.firewall.training.FirewallTrainingVO;
 import com.digitusforum.firewall.i18.I18VO;
 import com.digitusforum.firewall.login.TokenVO;
 import com.digitusforum.firewall.module.ModuleVO;
@@ -36,49 +36,49 @@ public class RequestService {
 			throw ThrowService.doIt(locale, 503, M.LOGIN_MICROSERVICE_OFFLINE);
 	}
 
-	private void checkCourseMS(String locale) {
-		if (!isUp(MicroservicesURLs.COURSE))
-			throw ThrowService.doIt(locale, 503, M.COURSE_MICROSERVICE_OFFLINE);
+	private void checkTrainingMS(String locale) {
+		if (!isUp(MicroservicesURLs.TRAINING))
+			throw ThrowService.doIt(locale, 503, M.TRAINING_MICROSERVICE_OFFLINE);
 	}
 
-	public FirewallCourseVO createCourse(FirewallCourseVO courseVO, String locale) {
-		checkCourseMS(locale);
-		String jsonResponse = request(MicroservicesURLs.COURSE_CREATE, courseVO, locale);
-		FirewallCourseVO course = new Gson().fromJson(jsonResponse, FirewallCourseVO.class);
-		return course;
+	public FirewallTrainingVO createTraining(FirewallTrainingVO trainingVO, String locale) {
+		checkTrainingMS(locale);
+		String jsonResponse = request(MicroservicesURLs.TRAINING_CREATE, trainingVO, locale);
+		FirewallTrainingVO training = new Gson().fromJson(jsonResponse, FirewallTrainingVO.class);
+		return training;
 	}
 	
-	public FirewallCourseVO delete(FirewallCourseVO courseVO, String locale) {
-		checkCourseMS(locale);
-		String jsonResponse = request(MicroservicesURLs.COURSE_DELETE, courseVO, locale);
-		FirewallCourseVO course = new Gson().fromJson(jsonResponse, FirewallCourseVO.class);
-		return course;
+	public FirewallTrainingVO delete(FirewallTrainingVO trainingVO, String locale) {
+		checkTrainingMS(locale);
+		String jsonResponse = request(MicroservicesURLs.TRAINING_DELETE, trainingVO, locale);
+		FirewallTrainingVO training = new Gson().fromJson(jsonResponse, FirewallTrainingVO.class);
+		return training;
 	}
 
-	public List<FirewallCourseVO> retrieveCourses(String locale) {
-		checkCourseMS(locale);
-		String jsonResponse = request(MicroservicesURLs.COURSE_RETRIEVE_ALL, locale);
-		List<FirewallCourseVO> courses = new Gson().fromJson(jsonResponse, List.class);
-		return courses;
+	public List<FirewallTrainingVO> retrieveTrainings(String locale) {
+		checkTrainingMS(locale);
+		String jsonResponse = request(MicroservicesURLs.TRAINING_RETRIEVE_ALL, locale);
+		List<FirewallTrainingVO> trainings = new Gson().fromJson(jsonResponse, List.class);
+		return trainings;
 	}
 
-	public FirewallCourseVO retrieveById(FirewallCourseVO courseVO, String locale) {
-		checkCourseMS(locale);
-		String jsonResponse = request(MicroservicesURLs.COURSE_RETRIEVE_BY_ID, courseVO, locale);
-		FirewallCourseVO course = new Gson().fromJson(jsonResponse, FirewallCourseVO.class);
-		return course;
+	public FirewallTrainingVO retrieveById(FirewallTrainingVO trainingVO, String locale) {
+		checkTrainingMS(locale);
+		String jsonResponse = request(MicroservicesURLs.TRAINING_RETRIEVE_BY_ID, trainingVO, locale);
+		FirewallTrainingVO training = new Gson().fromJson(jsonResponse, FirewallTrainingVO.class);
+		return training;
 	}
 	
-	public FirewallCourseVO retrieveSubjectsByCourseId(FirewallCourseVO courseVO, String locale) {
-		checkCourseMS(locale);
-		String jsonResponse = request(MicroservicesURLs.COURSE_RETRIEVE_SUBJECTS_BY_COURSE_ID, courseVO, locale);
-		FirewallCourseVO course = new Gson().fromJson(jsonResponse, FirewallCourseVO.class);
-		return course;
+	public FirewallTrainingVO retrieveSubjectsByTrainingId(FirewallTrainingVO trainingVO, String locale) {
+		checkTrainingMS(locale);
+		String jsonResponse = request(MicroservicesURLs.TRAINING_RETRIEVE_SUBJECTS_BY_TRAINING_ID, trainingVO, locale);
+		FirewallTrainingVO training = new Gson().fromJson(jsonResponse, FirewallTrainingVO.class);
+		return training;
 	}
 
-	public List<ModuleVO> retrieveModulesWithVideosByCourseId(FirewallCourseVO courseVO, String locale) {
-		checkCourseMS(locale);
-		String jsonResponse = request(MicroservicesURLs.COURSE_RETRIEVE_MODULES_WITH_VIDEOS_BY_COURSE_ID, courseVO,
+	public List<ModuleVO> retrieveModulesWithVideosByTrainingId(FirewallTrainingVO trainingVO, String locale) {
+		checkTrainingMS(locale);
+		String jsonResponse = request(MicroservicesURLs.TRAINING_RETRIEVE_MODULES_WITH_VIDEOS_BY_TRAINING_ID, trainingVO,
 				locale);
 		List<ModuleVO> modules = new Gson().fromJson(jsonResponse, List.class);
 		return modules;
