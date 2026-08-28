@@ -1,8 +1,8 @@
 <!-- para IA. não é README de humano. -->
 # SPEC — firewall
 
-status: v0.6
-sha: `5b8cf60`
+status: v0.7
+sha: `a2632b3`
 data: 2026-08-28
 
 ## Como usar
@@ -76,7 +76,7 @@ Público se o treinamento é gratuito (`paid=false`); senão REGRA-AUTH-PAID:
 Exige token (além do que já está):
 - CONTRATO-STRIPE-SUB `POST /firewall/billing/v1/checkout/subscription` — Session embedded mensalidade java, `card`, devolve `clientSecret`
 - CONTRATO-STRIPE-BUY `POST /firewall/billing/v1/checkout/training` `{trainingId}` — Session embedded avulsa `card`+`pix`, devolve `clientSecret`
-- CONTRATO-ME `GET /firewall/billing/v1/me` — assinatura + lista de trainingId comprados
+- CONTRATO-ME `POST /firewall/billing/v1/me` — assinatura java + lista de trainingId comprados (DADOS-COMPRA / DADOS-ASSINATURA no user MS; sem Stripe na leitura)
 
 Exige token sempre:
 - user: `POST /firewall/user/v1/create` (não é signup; signup é CONTRATO-EV-OK) · `GET /{id}/retrieve` · `{id}/update` · `{id}/delete`
@@ -99,7 +99,7 @@ login `:8082/login/v1/createToken` (após código ok; **sem senha**) · user `:8
 - GAP-FRONT-BUNDLE: **revogado** (2026-08-28). CONTRATO-FRONT-BUNDLE.
 - GAP-VITRINE: **revogado** (2026-08-28). Gratuito = público; pago = token + compra.
 - GAP-COMPRA: **revogado** (MVP1). DADOS-COMPRA / DADOS-ASSINATURA no user MS.
-- GAP-COMPRA-OLD: onde persiste “user comprou este trainingId” (matrícula). Sem DADOS, REGRA-AUTH-PAID não fecha no código.
+- GAP-COMPRA-OLD: **revogado** (2026-08-28). Matrícula = DADOS-COMPRA / DADOS-ASSINATURA no user MS. REGRA-AUTH-PAID na borda: module `retrieveByTrainingIdWithVideos` e video `retrieveById` exigem token + compra ou assinatura java se `training.paid`.
 - GAP-AUDIO: aula = gif + arquivo de áudio; coluna/chave do áudio ainda não fechada.
 - GAP-IDOR-USER: retrieve/update/delete usam `{id}` da URL, não o userId do token. Admin-only? ou só o próprio id?
 - GAP-CORS: `@CrossOrigin` / `origins="*"` na borda. Origin permitida ainda não está na spec.

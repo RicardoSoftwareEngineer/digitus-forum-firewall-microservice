@@ -20,6 +20,12 @@ public class MicroservicesURLs {
 	public static String SUP = USER + "/sup"; 
 	public static String CONVERSATIONS = USER + "/conversations"; 
 	public static String CONVERSATION = USER + "/conversation"; 
+	public static String USER_PURCHASE_BY_USER = USER + "/purchase/retrieveByUserId";
+	public static String USER_PURCHASE_HAS = USER + "/purchase/hasPurchase";
+	public static String USER_PURCHASE_UPSERT = USER + "/purchase/upsertPaid";
+	public static String USER_SUBSCRIPTION_BY_USER = USER + "/subscription/retrieveByUserId";
+	public static String USER_SUBSCRIPTION_HAS_ACTIVE = USER + "/subscription/hasActive";
+	public static String USER_SUBSCRIPTION_UPSERT = USER + "/subscription/upsert";
 	
 	public static String PERFIL = EnvironmentService.PERFIL_SERVER_URL + EnvironmentService.PERFIL_SERVER_PORT + "/perfil" + EnvironmentService.PERFIL_SERVER_VERSION;
 	public static String PERFIL_RETRIEVE_LAST_USED = PERFIL + "/retrieve/lastUsed"; 
