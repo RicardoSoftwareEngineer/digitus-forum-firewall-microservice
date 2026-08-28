@@ -54,8 +54,8 @@ Nenhum. Sessão vive só em memória (`uuidCache`). TTL observado no código: `e
 Público (sem token):
 - CONTRATO-STRIPE-HOOK `POST /firewall/billing/v1/stripe/webhook` — Stripe-Signature; sem token de aluno
 
-- CONTRATO-EV-SEND `POST /firewall/emailVerification/v1/sendValidationEmail` body `{email}` — mock: response inclui `readableNumber`
-- CONTRATO-EV-OK `POST /firewall/emailVerification/v1/validateEmail` body `{email, readableNumber}` **sem senha** — cria ou autentica no user MS **e** devolve token (UUID; cliente prefixa `Bearer`)
+- CONTRATO-EV-SEND `POST /firewall/emailVerification/v1/sendValidationEmail` body `{email}` — mock: response inclui `readableNumber`. código alinhado (passthrough; sem captcha enquanto mock).
+- CONTRATO-EV-OK `POST /firewall/emailVerification/v1/validateEmail` body `{email, readableNumber}` **sem senha** — cria ou autentica no user MS **e** devolve token (UUID no cache da borda; cliente prefixa `Bearer`). código alinhado (sem senha; sem login MS).
 - CONTRATO-I18-GET `POST /firewall/internationalization/v1/i18` — lê mensagem por `locale`+`keyy`
 - CONTRATO-HEALTH `/firewall/healthCheck`, `/healthCheck`, `/test`, OPTIONS `/**`
 
