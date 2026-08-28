@@ -32,6 +32,7 @@ data: 2026-08-28
 - REGRA-ID-1: ids de domínio são UUID string.
 - REGRA-GURU-HOST: um domínio, um front. Borda não roteia por host de guru.
 - REGRA-MVP1-PAY: Stripe Embedded Checkout. Mensalidade `card`. Avulso `card`+`pix`. Response `clientSecret`. Ver SPEC-MVP1.md (frontend).
+- REGRA-MVP1-STRIPE-TEST: só chaves `sk_test_` / `pk_test_`. Sem `sk_live_` até Ricardo pedir.
 - REGRA-MVP1-WEBHOOK: webhook Stripe na borda; verificar assinatura; só então user MS grava entitlement.
 
 ## NÃO
@@ -44,6 +45,7 @@ data: 2026-08-28
 - NÃO-COOKIE: sessão não é cookie. Header `Authorization` + cache UUID.
 - NÃO-PIX-SUB: PIX não é método de mensalidade.
 - NÃO-STRIPE-SECRET: secret do Stripe só em env, nunca git, nunca o front.
+- NÃO-STRIPE-LIVE: sem chave live até Ricardo pedir.
 
 ## DADOS
 Nenhum. Sessão vive só em memória (`uuidCache`). TTL observado no código: `expirationInSeconds = 369000` (~4,3 dias). Ver GAP-TTL.
