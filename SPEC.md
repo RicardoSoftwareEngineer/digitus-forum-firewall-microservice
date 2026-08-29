@@ -1,8 +1,8 @@
 <!-- para IA. não é README de humano. -->
 # SPEC — firewall
 
-status: v0.8
-sha: `2d4c9fe`
+status: v0.9
+sha: `f36c738`
 data: 2026-08-28
 
 ## Como usar
@@ -78,6 +78,7 @@ Público (sem token):
 Público se o treinamento é gratuito (`paid=false`); senão REGRA-AUTH-PAID:
 - **Revogado** (2026-08-28): prefixo `/firewall/course/v1` e `retrieve*ByCourseId*`. Equivalente training abaixo.
 - training: `GET retrieveAll` (só gratuitos sem token; com token: gratuitos + comprados). JSON de cada training inclui `guruId`, `paid`, `price` (centavos BRL) — DADOS-TRAINING no course MS. · `retrieveById` · `retrieveSubjectsByTrainingId`
+- CONTRATO-TRAINING-CATALOG: PaidAccessService.retrieveTraining / requireReadableTraining lê o training via course `POST /training/v1/retrieveCatalogById` `{trainingId}` (sem userId, sem dono). **Não** usa `TRAINING_RETRIEVE_BY_ID`. Gate pago (REGRA-AUTH-PAID) permanece: se paid, token + DADOS-COMPRA/assinatura. Grátis sem token. `retrieveById` da borda (create/delete path) permanece dono.
 - module: `retrieveById` `retrieveByTrainingId` `retrieveByTrainingIdWithVideos`
 - video: `retrieveById` `retrieveBySubjectId`
 - link: `retrieveByVideoId`

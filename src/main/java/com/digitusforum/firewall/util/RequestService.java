@@ -68,6 +68,13 @@ public class RequestService {
 		FirewallTrainingVO training = new Gson().fromJson(jsonResponse, FirewallTrainingVO.class);
 		return training;
 	}
+
+	public FirewallTrainingVO retrieveCatalogById(FirewallTrainingVO trainingVO, String locale) {
+		checkTrainingMS(locale);
+		String jsonResponse = request(MicroservicesURLs.TRAINING_RETRIEVE_CATALOG_BY_ID, trainingVO, locale);
+		FirewallTrainingVO training = new Gson().fromJson(jsonResponse, FirewallTrainingVO.class);
+		return training;
+	}
 	
 	public FirewallTrainingVO retrieveSubjectsByTrainingId(FirewallTrainingVO trainingVO, String locale) {
 		checkTrainingMS(locale);

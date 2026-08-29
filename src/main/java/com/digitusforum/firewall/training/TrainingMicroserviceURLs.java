@@ -7,5 +7,6 @@ public class TrainingMicroserviceURLs {
 	public static String TRAINING_RETRIEVE_ALL = TRAINING + "/retrieveAll"; 
 	public static String TRAINING_CREATE = TRAINING + "/create"; 
 	public static String TRAINING_RETRIEVE_BY_ID = TRAINING + "/retrieveById"; 
+	public static String TRAINING_RETRIEVE_CATALOG_BY_ID = TRAINING + "/retrieveCatalogById"; 
 	public static String TRAINING_RETRIEVE_MODULES_WITH_VIDEOS_BY_TRAINING_ID = TRAINING + "/retrieveModulesWithVideosByTrainingId"; 
 }
