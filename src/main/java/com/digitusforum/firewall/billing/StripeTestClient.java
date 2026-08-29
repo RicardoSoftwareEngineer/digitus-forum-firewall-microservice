@@ -32,10 +32,10 @@ import com.google.gson.JsonParser;
 @Component
 public class StripeTestClient {
 	public static final String JAVA_PAGO_TRAINING_ID = "c0ffee00-0000-4000-8000-000000000001";
-	public static final String JAVA_PAGO_PRODUCT = "prod_V9tJkcp307vgoZ";
-	public static final String JAVA_PAGO_PRICE = "price_1U9ZXuRS56hFPP66CyqsBUi7";
-	public static final String JAVA_SUB_PRODUCT = "prod_V9tJWoC67ZYO3Q";
-	public static final String JAVA_SUB_PRICE = "price_1U9ZXvRS56hFPP66Qn70qI7o";
+	public static final String JAVA_PAGO_PRODUCT = "prod_V9v07KbN02y7PV";
+	public static final String JAVA_PAGO_PRICE = "price_1U9bA6EXwk40r381is5xrXGd";
+	public static final String JAVA_SUB_PRODUCT = "prod_V9v0HkWMSqlbtZ";
+	public static final String JAVA_SUB_PRICE = "price_1U9bA7EXwk40r38160FozHBx";
 	public static final String GURU_JAVA = "java";
 	public static final String DEFAULT_RETURN_URL = "http://localhost:8080/firewall/billing/v1/embedded-return?session_id={CHECKOUT_SESSION_ID}";
 
