@@ -63,4 +63,10 @@ public class BillingRequestService {
 		return vo != null && vo.isHasActive();
 	}
 
+	public SubscriptionVO upsertSubscription(SubscriptionVO subscriptionVO, String locale) {
+		checkUserMS(locale);
+		String jsonResponse = requestService.request(MicroservicesURLs.USER_SUBSCRIPTION_UPSERT, subscriptionVO, locale);
+		return new Gson().fromJson(jsonResponse, SubscriptionVO.class);
+	}
+
 }

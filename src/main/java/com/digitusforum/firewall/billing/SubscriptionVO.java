@@ -5,6 +5,8 @@ public class SubscriptionVO {
 	private String userId;
 	private String scope;
 	private String guruId;
+	private String stripeCustomerId;
+	private String stripeSubscriptionId;
 	private String status;
 	private boolean hasActive;
 
@@ -38,6 +40,22 @@ public class SubscriptionVO {
 
 	public void setGuruId(String guruId) {
 		this.guruId = guruId;
+	}
+
+	public String getStripeCustomerId() {
+		return stripeCustomerId;
+	}
+
+	public void setStripeCustomerId(String stripeCustomerId) {
+		this.stripeCustomerId = stripeCustomerId;
+	}
+
+	public String getStripeSubscriptionId() {
+		return stripeSubscriptionId;
+	}
+
+	public void setStripeSubscriptionId(String stripeSubscriptionId) {
+		this.stripeSubscriptionId = stripeSubscriptionId;
 	}
 
 	public String getStatus() {
