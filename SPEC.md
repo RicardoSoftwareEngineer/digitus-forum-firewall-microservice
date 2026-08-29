@@ -53,8 +53,8 @@ data: 2026-08-28
 Nenhum de domínio próprio. Sessão vive só em memória (`uuidCache`). TTL observado no código: `expirationInSeconds = 369000` (~4,3 dias). Ver GAP-TTL.
 
 Catálogo Stripe **TEST** (público, não é secret; só `sk_test_` / `pk_test_`):
-- DADOS-STRIPE-AVULSO-JAVA: Avulso Java Pago (teste). `trainingId=c0ffee00-0000-4000-8000-000000000001` `prod_V9tJkcp307vgoZ` `price_1U9ZXuRS56hFPP66CyqsBUi7`. Outro training pago sem mapa de price → 400.
-- DADOS-STRIPE-SUB-JAVA: Mensalidade guru java. `prod_V9tJWoC67ZYO3Q` `price_1U9ZXvRS56hFPP66Qn70qI7o` `interval=month` `guruId=java` R$ 59.
+- DADOS-STRIPE-AVULSO-JAVA: Avulso Java Pago (teste). `trainingId=c0ffee00-0000-4000-8000-000000000001` `prod_V9v07KbN02y7PV` `price_1U9bA6EXwk40r381is5xrXGd`. Outro training pago sem mapa de price → 400.
+- DADOS-STRIPE-SUB-JAVA: Mensalidade guru java. `prod_V9v0HkWMSqlbtZ` `price_1U9bA7EXwk40r38160FozHBx` `interval=month` `guruId=java` R$ 59.
 
 Env (nunca commit de valor): `STRIPE_SECRET_KEY=sk_test_...` `STRIPE_PUBLISHABLE_KEY=pk_test_...` `STRIPE_WEBHOOK_SECRET=whsec_...` (opcional). Recusa `sk_live_` / `pk_live_`.
 
@@ -84,8 +84,8 @@ Público se o treinamento é gratuito (`paid=false`); senão REGRA-AUTH-PAID:
 - link: `retrieveByVideoId`
 
 Exige token (além do que já está):
-- CONTRATO-STRIPE-SUB `POST /firewall/billing/v1/checkout/subscription` — token; se assinatura java já active → 409; senão Session `ui_mode=embedded` `mode=subscription` price=`price_1U9ZXvRS56hFPP66Qn70qI7o` metadata `userId`+`guruId=java` `payment_method_types=card` `return_url` (REGRA abaixo). Devolve `{clientSecret}` (nunca `sk_`).
-- CONTRATO-STRIPE-BUY `POST /firewall/billing/v1/checkout/training` `{trainingId, returnUrl?}` — token; pre-checks (pago, DADOS-COMPRA/assinatura 409, Stripe search already-paid upsert+409). Session `ui_mode=embedded` `mode=payment` line_item price=`price_1U9ZXuRS56hFPP66CyqsBUi7` **só** se trainingId = Java Pago teste; outro pago sem mapa → 400; quantity 1; metadata `userId`+`trainingId`; `client_reference_id=userId`; **card-only** (sem `pix`) até GAP-STRIPE-PIX. `return_url`: se `body.returnUrl` é http(s) localhost ou domínio nosso (`eusouprogramadorjunior.com` / `digitusforum.com`), usa; senão CONTRATO-STRIPE-RETURN. file:// inválido. Devolve `{trainingId, clientSecret}` (nunca `sk_`).
+- CONTRATO-STRIPE-SUB `POST /firewall/billing/v1/checkout/subscription` — token; se assinatura java já active → 409; senão Session `ui_mode=embedded` `mode=subscription` price=`price_1U9bA7EXwk40r38160FozHBx` metadata `userId`+`guruId=java` `payment_method_types=card` `return_url` (REGRA abaixo). Devolve `{clientSecret}` (nunca `sk_`).
+- CONTRATO-STRIPE-BUY `POST /firewall/billing/v1/checkout/training` `{trainingId, returnUrl?}` — token; pre-checks (pago, DADOS-COMPRA/assinatura 409, Stripe search already-paid upsert+409). Session `ui_mode=embedded` `mode=payment` line_item price=`price_1U9bA6EXwk40r381is5xrXGd` **só** se trainingId = Java Pago teste; outro pago sem mapa → 400; quantity 1; metadata `userId`+`trainingId`; `client_reference_id=userId`; **card-only** (sem `pix`) até GAP-STRIPE-PIX. `return_url`: se `body.returnUrl` é http(s) localhost ou domínio nosso (`eusouprogramadorjunior.com` / `digitusforum.com`), usa; senão CONTRATO-STRIPE-RETURN. file:// inválido. Devolve `{trainingId, clientSecret}` (nunca `sk_`).
 - CONTRATO-STRIPE-PK `POST /firewall/billing/v1/publishable-key` — token; `{publishableKey}` de `STRIPE_PUBLISHABLE_KEY` se começa com `pk_test_`; 503 se ausente; 503 se `pk_live_`.
 - CONTRATO-STRIPE-CONFIRM `POST /firewall/billing/v1/checkout/confirm` `{sessionId}` — token; retrieve session na Stripe; se `payment_status=paid` (ou subscription complete) upsert DADOS-COMPRA / DADOS-ASSINATURA via BillingRequestService; devolve payload igual CONTRATO-ME. Confirmação local para não depender de URL pública de webhook.
 - CONTRATO-ME `POST /firewall/billing/v1/me` — assinatura java + lista de trainingId comprados (DADOS-COMPRA / DADOS-ASSINATURA no user MS; sem Stripe na leitura)
