@@ -45,7 +45,7 @@ public class PaidAccessService {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Informe o trainingId.");
 		FirewallTrainingVO query = new FirewallTrainingVO();
 		query.setTrainingId(trainingId);
-		FirewallTrainingVO training = requestService.retrieveById(query, locale);
+		FirewallTrainingVO training = requestService.retrieveCatalogById(query, locale);
 		if (training == null)
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Treinamento não encontrado.");
 		if (!training.isPaid())
@@ -72,7 +72,7 @@ public class PaidAccessService {
 	public FirewallTrainingVO retrieveTraining(String trainingId, String locale) {
 		FirewallTrainingVO query = new FirewallTrainingVO();
 		query.setTrainingId(trainingId);
-		return requestService.retrieveById(query, locale);
+		return requestService.retrieveCatalogById(query, locale);
 	}
 
 }
