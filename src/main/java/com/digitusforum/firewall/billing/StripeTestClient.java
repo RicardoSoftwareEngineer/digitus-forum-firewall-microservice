@@ -275,7 +275,7 @@ public class StripeTestClient {
 	private MultiValueMap<String, String> baseEmbeddedForm(String mode, String price, String userId, String email,
 			String returnUrl) {
 		MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
-		form.add("ui_mode", "embedded");
+		form.add("ui_mode", "embedded_page");
 		form.add("mode", mode);
 		form.add("line_items[0][price]", price);
 		form.add("line_items[0][quantity]", "1");
