@@ -1,6 +1,5 @@
 package com.digitusforum.firewall.background;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 public class BackgroundSaveVO {
@@ -10,7 +9,7 @@ public class BackgroundSaveVO {
 	private String name;
 	private String wallpaperData;
 	private String dominantColor;
-	private ZonedDateTime createdIn;
+	private String createdIn;
 	private boolean deleted;
 	private Boolean backgroundAuto;
 	private String pinnedBackgroundId;
@@ -66,11 +65,11 @@ public class BackgroundSaveVO {
 		this.dominantColor = dominantColor;
 	}
 
-	public ZonedDateTime getCreatedIn() {
+	public String getCreatedIn() {
 		return createdIn;
 	}
 
-	public void setCreatedIn(ZonedDateTime createdIn) {
+	public void setCreatedIn(String createdIn) {
 		this.createdIn = createdIn;
 	}
 
