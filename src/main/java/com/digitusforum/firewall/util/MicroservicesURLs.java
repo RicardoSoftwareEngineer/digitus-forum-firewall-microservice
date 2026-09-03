@@ -26,6 +26,11 @@ public class MicroservicesURLs {
 	public static String USER_SUBSCRIPTION_BY_USER = USER + "/subscription/retrieveByUserId";
 	public static String USER_SUBSCRIPTION_HAS_ACTIVE = USER + "/subscription/hasActive";
 	public static String USER_SUBSCRIPTION_UPSERT = USER + "/subscription/upsert";
+	public static String USER_BACKGROUND_SAVE = USER + "/background/save";
+	public static String USER_BACKGROUND_BY_USER = USER + "/background/retrieveByUserId";
+	public static String USER_BACKGROUND_SELECT = USER + "/background/select";
+	public static String USER_BACKGROUND_SET_AUTO = USER + "/background/setAuto";
+	public static String USER_BACKGROUND_PREFS = USER + "/background/prefs";
 	
 	public static String PERFIL = EnvironmentService.PERFIL_SERVER_URL + EnvironmentService.PERFIL_SERVER_PORT + "/perfil" + EnvironmentService.PERFIL_SERVER_VERSION;
 	public static String PERFIL_RETRIEVE_LAST_USED = PERFIL + "/retrieve/lastUsed"; 
