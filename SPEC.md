@@ -92,6 +92,8 @@ Exige token (além do que já está):
 
 Exige token sempre:
 - user: `POST /firewall/user/v1/create` (não é signup; signup é CONTRATO-EV-OK) · `GET /{id}/retrieve` · `{id}/update` · `{id}/delete`
+  - FirewallUserVO: `id`, `name`, `age` (Integer, nullable), `email`. Update body `{name?, age?, email?}` **sem senha**; proxy para user MS. Retrieve/update/delete: PathVariable String + só o próprio userId (PR #30).
+  - Meus dados (vitrine): formulário no centro do cinema; borda só faz proxy do VO.
 - chat: `/firewall/user/v1/chat` · `conversations` · `conversation`
 - training: `create` · `delete`
 - module: `create` `update` `delete` `reorder` `addVideo` `removeVideo`
@@ -113,7 +115,7 @@ login `:8082/login/v1/createToken` (após código ok; **sem senha**) · user `:8
 - GAP-COMPRA: **revogado** (MVP1). DADOS-COMPRA / DADOS-ASSINATURA no user MS.
 - GAP-COMPRA-OLD: **revogado** (2026-08-28). Matrícula = DADOS-COMPRA / DADOS-ASSINATURA no user MS. REGRA-AUTH-PAID na borda: module `retrieveByTrainingIdWithVideos` e video `retrieveById` exigem token + compra ou assinatura java se `training.paid`.
 - GAP-AUDIO: aula = gif + arquivo de áudio; coluna/chave do áudio ainda não fechada.
-- GAP-IDOR-USER: retrieve/update/delete usam `{id}` da URL, não o userId do token. Admin-only? ou só o próprio id?
+- GAP-IDOR-USER: **revogado** (PR #30). retrieve/update/delete exigem `{id}` == userId do token.
 - GAP-CORS: `@CrossOrigin` / `origins="*"` na borda. Origin permitida ainda não está na spec.
 - GAP-TTL: 369000s vs env `TOKEN_EXPIRATION_IN_SECONDS`. Qual vale?
 - GAP-PREFIX: login MS devolve UUID cru; borda exige `Bearer <uuid>`. Cliente precisa prefixar.
