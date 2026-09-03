@@ -1,9 +1,9 @@
 <!-- para IA. não é README de humano. -->
 # SPEC — firewall
 
-status: v0.9
+status: v0.10
 sha: `f36c738`
-data: 2026-08-28
+data: 2026-09-03
 
 ## Como usar
 - Este arquivo é a fonte. Código ≠ spec → **bug de código**. Spec errada → Ricardo muda **este** arquivo, depois o código.
@@ -89,6 +89,13 @@ Exige token (além do que já está):
 - CONTRATO-STRIPE-PK `POST /firewall/billing/v1/publishable-key` — token; `{publishableKey}` de `STRIPE_PUBLISHABLE_KEY` se começa com `pk_test_`; 503 se ausente; 503 se `pk_live_`.
 - CONTRATO-STRIPE-CONFIRM `POST /firewall/billing/v1/checkout/confirm` `{sessionId}` — token; retrieve session na Stripe; se `payment_status=paid` (ou subscription complete) upsert DADOS-COMPRA / DADOS-ASSINATURA via BillingRequestService; devolve payload igual CONTRATO-ME. Confirmação local para não depender de URL pública de webhook.
 - CONTRATO-ME `POST /firewall/billing/v1/me` — assinatura java + lista de trainingId comprados (DADOS-COMPRA / DADOS-ASSINATURA no user MS; sem Stripe na leitura)
+
+- CONTRATO-BG-SAVE `POST /firewall/background/v1/save` `{name, wallpaperData, dominantColor}` — token; userId do token → user MS
+- CONTRATO-BG-LIST `POST /firewall/background/v1/list` — token; lista DADOS-BACKGROUND-SAVE do user
+- CONTRATO-BG-SELECT `POST /firewall/background/v1/select` `{backgroundId}` — token; pin + auto=false
+- CONTRATO-BG-AUTO `POST /firewall/background/v1/setAuto` — token; auto=true, limpa pin
+- CONTRATO-BG-PREFS `POST /firewall/background/v1/prefs` — token; `{backgroundAuto, pinnedBackgroundId, wallpaperData?}`
+
 
 Exige token sempre:
 - user: `POST /firewall/user/v1/create` (não é signup; signup é CONTRATO-EV-OK) · `GET /{id}/retrieve` · `{id}/update` · `{id}/delete`
