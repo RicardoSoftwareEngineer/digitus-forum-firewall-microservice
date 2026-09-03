@@ -3,6 +3,7 @@ package com.digitusforum.firewall.user;
 public class FirewallUserVO {
 	private String id;
 	private String name;
+	private Integer age;
 	private String email;
 	private String password;
 	private String token;
@@ -37,6 +38,14 @@ public class FirewallUserVO {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
 	}
 
 	public String getEmail() {
