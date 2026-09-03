@@ -33,7 +33,7 @@ public class FirewallUserService {
 		return new Gson().fromJson(jsonResponse, FirewallUserVO[].class);
 	}
 
-	public FirewallUserVO retrieveUserById(String locale, int id) {
+	public FirewallUserVO retrieveUserById(String locale, String id) {
 		checkUserMS(locale);
 		String jsonResponse = null;
 		try {
@@ -46,7 +46,7 @@ public class FirewallUserService {
 		return new Gson().fromJson(jsonResponse, FirewallUserVO.class);
 	}
 
-	public FirewallUserVO updateUser(String locale, int id, FirewallUserVO userVO) {
+	public FirewallUserVO updateUser(String locale, String id, FirewallUserVO userVO) {
 		checkUserMS(locale);
 		String jsonResponse = null;
 		try {
@@ -61,7 +61,7 @@ public class FirewallUserService {
 		return new Gson().fromJson(jsonResponse, FirewallUserVO.class);
 	}
 
-	public FirewallUserVO deleteUser(String locale, int id) {
+	public FirewallUserVO deleteUser(String locale, String id) {
 		checkUserMS(locale);
 		String jsonResponse = null;
 		try {
