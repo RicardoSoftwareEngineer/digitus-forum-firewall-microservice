@@ -53,8 +53,11 @@ data: 2026-09-03
 Nenhum de domínio próprio. Sessão vive só em memória (`uuidCache`). TTL observado no código: `expirationInSeconds = 369000` (~4,3 dias). Ver GAP-TTL.
 
 Catálogo Stripe **TEST** (público, não é secret; só `sk_test_` / `pk_test_`):
-- DADOS-STRIPE-AVULSO-JAVA: Avulso Java Pago (teste). `trainingId=c0ffee00-0000-4000-8000-000000000001` `prod_V9v07KbN02y7PV` `price_1U9bA6EXwk40r381is5xrXGd`. Outro training pago sem mapa de price → 400.
-- DADOS-STRIPE-SUB-JAVA: Mensalidade guru java. `prod_V9v0HkWMSqlbtZ` `price_1U9bA7EXwk40r38160FozHBx` `interval=month` `guruId=java` R$ 59.
+- DADOS-STRIPE-AVULSO-JAVA: **legado teste** `trainingId=c0ffee00-0000-4000-8000-000000000001` soft-deleted no catálogo local; `prod_V9v07KbN02y7PV` / `price_1U9bA6EXwk40r381is5xrXGd` (R$ 29). Código ainda mapeia só este id → 400 para outros pagos.
+- DADOS-CATALOG-PAID (2026-09-10, preços em DADOS-TRAINING / course SPEC): Pleno `a1000001-…` 30000; HashMap `a1000005-…` 1000; JPA lazy `a1000006-…` 1000; Virtual Threads `a1000007-…` 1000. Sem `price_` Stripe ainda.
+- GAP-STRIPE-CATALOG-MAP: criar Products/Prices TEST (e depois live) e mapa trainingId→price_ para os 4 pagos acima; aposentar mapa c0ffee.
+- GAP-STRIPE-SUB-60: mensalidade produto = **R$ 60**/mês; recriar `price_` mensal e atualizar DADOS-STRIPE-SUB-JAVA + código.
+- DADOS-STRIPE-SUB-JAVA: Mensalidade guru java. `prod_V9v0HkWMSqlbtZ` `price_1U9bA7EXwk40r38160FozHBx` `interval=month` `guruId=java` **R$ 60** (6000 centavos). `price_1U9bA7EXwk40r38160FozHBx` ainda é o price TEST antigo (R$ 59) até recriar no Dashboard (GAP-STRIPE-SUB-60).
 
 Env (nunca commit de valor): `STRIPE_SECRET_KEY=sk_test_...` `STRIPE_PUBLISHABLE_KEY=pk_test_...` `STRIPE_WEBHOOK_SECRET=whsec_...` (opcional). Recusa `sk_live_` / `pk_live_`.
 
@@ -85,7 +88,7 @@ Público se o treinamento é gratuito (`paid=false`); senão REGRA-AUTH-PAID:
 
 Exige token (além do que já está):
 - CONTRATO-STRIPE-SUB `POST /firewall/billing/v1/checkout/subscription` — token; se assinatura java já active → 409; senão Session `ui_mode=embedded_page` `mode=subscription` price=`price_1U9bA7EXwk40r38160FozHBx` metadata `userId`+`guruId=java` `payment_method_types=card` `return_url` (REGRA abaixo). Devolve `{clientSecret}` (nunca `sk_`).
-- CONTRATO-STRIPE-BUY `POST /firewall/billing/v1/checkout/training` `{trainingId, returnUrl?}` — token; pre-checks (pago, DADOS-COMPRA/assinatura 409, Stripe search already-paid upsert+409). Session `ui_mode=embedded_page` `mode=payment` line_item price=`price_1U9bA6EXwk40r381is5xrXGd` **só** se trainingId = Java Pago teste; outro pago sem mapa → 400; quantity 1; metadata `userId`+`trainingId`; `client_reference_id=userId`; **card-only** (sem `pix`) até GAP-STRIPE-PIX. `return_url`: se `body.returnUrl` é http(s) localhost ou domínio nosso (`eusouprogramadorjunior.com` / `digitusforum.com`), usa; senão CONTRATO-STRIPE-RETURN. file:// inválido. Devolve `{trainingId, clientSecret}` (nunca `sk_`).
+- CONTRATO-STRIPE-BUY `POST /firewall/billing/v1/checkout/training` `{trainingId, returnUrl?}` — token; pre-checks (pago, DADOS-COMPRA/assinatura 409, Stripe search already-paid upsert+409). Session `ui_mode=embedded_page` `mode=payment` line_item price_ **só** se trainingId mapeado (hoje ainda só Java Pago teste c0ffee; GAP-STRIPE-CATALOG-MAP); outro pago sem mapa → 400; quantity 1; metadata `userId`+`trainingId`; `client_reference_id=userId`; **card-only** (sem `pix`) até GAP-STRIPE-PIX. `return_url`: se `body.returnUrl` é http(s) localhost ou domínio nosso (`eusouprogramadorjunior.com` / `digitusforum.com`), usa; senão CONTRATO-STRIPE-RETURN. file:// inválido. Devolve `{trainingId, clientSecret}` (nunca `sk_`).
 - CONTRATO-STRIPE-PK `POST /firewall/billing/v1/publishable-key` — token; `{publishableKey}` de `STRIPE_PUBLISHABLE_KEY` se começa com `pk_test_`; 503 se ausente; 503 se `pk_live_`.
 - CONTRATO-STRIPE-CONFIRM `POST /firewall/billing/v1/checkout/confirm` `{sessionId}` — token; retrieve session na Stripe; se `payment_status=paid` (ou subscription complete) upsert DADOS-COMPRA / DADOS-ASSINATURA via BillingRequestService; devolve payload igual CONTRATO-ME. Confirmação local para não depender de URL pública de webhook.
 - CONTRATO-ME `POST /firewall/billing/v1/me` — assinatura java + lista de trainingId comprados (DADOS-COMPRA / DADOS-ASSINATURA no user MS; sem Stripe na leitura)
